@@ -12,5 +12,8 @@ RUN mvn package -DskipTests
 
 
 # Run the web service on container startup.
+#
+# java -Dserver.port=80 -jar /Users/xuyongchang/bilibili/glowworm/java_app/football/booking-web/target/booking-web-1.0-SNAPSHOT.jar
+
 CMD ["java","-Djava.security.egd=file:/dev/./urandom","-Dserver.port=80","-jar","/app/target/booking-web-1.0-SNAPSHOT.jar"]
 
