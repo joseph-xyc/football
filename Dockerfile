@@ -10,6 +10,7 @@ COPY */src ./src/
 # Build a release artifact.
 RUN mvn package -DskipTests
 
+
 # Run the web service on container startup.
 CMD ["java","-Djava.security.egd=file:/dev/./urandom","-Dserver.port=80","-jar","/app/target/booking-web-1.0-SNAPSHOT.jar"]
 
