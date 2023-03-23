@@ -13,10 +13,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-annotation</artifactId>
-            <version>${mybatis.plus.version}</version>
-            <scope>compile</scope>
+            <groupId>com.glowworm</groupId>
+            <artifactId>booking-dao</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 

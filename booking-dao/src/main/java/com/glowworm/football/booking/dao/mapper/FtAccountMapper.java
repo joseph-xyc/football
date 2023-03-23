@@ -1,7 +1,7 @@
 package com.glowworm.football.booking.dao.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.glowworm.football.booking.domain.account.FtAccountPo;
+import com.glowworm.football.booking.dao.po.FtAccountPo;
 
 /**
  * @author xuyongchang
