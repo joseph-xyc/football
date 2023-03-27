@@ -1,6 +1,8 @@
 package com.glowworm.football.booking.web.context.arg_resolver;
 
 import com.glowworm.football.booking.domain.context.WxContext;
+import com.glowworm.football.booking.web.config.WebConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -19,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class WxContextArgResolver implements HandlerMethodArgumentResolver {
 
+    @Autowired
+    private WebConfig webConfig;
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
 
@@ -31,7 +36,7 @@ public class WxContextArgResolver implements HandlerMethodArgumentResolver {
         Object request = webRequest.getNativeRequest();
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
-            return httpRequest.getAttribute("context");
+            return httpRequest.getAttribute(webConfig.getContextKey());
         }
         return new Object();
     }
