@@ -3,6 +3,7 @@ package com.glowworm.football.booking.service.account;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.glowworm.football.booking.dao.po.FtAccountPo;
 import com.glowworm.football.booking.domain.account.AccountBean;
+import com.glowworm.football.booking.domain.context.WxContext;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public interface IAccountService extends IService<FtAccountPo> {
 
 
-    List<AccountBean> queryAccount ();
+    List<AccountBean> queryAccount (WxContext ctx);
 
     void createAccount (AccountBean accountBean);
 

@@ -2,6 +2,7 @@ package com.glowworm.football.booking.web.test;
 
 import com.glowworm.football.booking.domain.account.AccountBean;
 import com.glowworm.football.booking.domain.account.CreateAccountVo;
+import com.glowworm.football.booking.domain.context.WxContext;
 import com.glowworm.football.booking.service.account.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,9 @@ public class MyTestController {
     private IAccountService accountService;
 
     @GetMapping(value = "/query_account")
-    public List<AccountBean> queryAccount () {
+    public List<AccountBean> queryAccount (WxContext ctx) {
 
-        return accountService.queryAccount();
+        return accountService.queryAccount(ctx);
     }
 
     @GetMapping(value = "/create_account")
