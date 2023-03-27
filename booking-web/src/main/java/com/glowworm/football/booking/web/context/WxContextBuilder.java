@@ -23,7 +23,8 @@ public class WxContextBuilder {
 
     public WxContext build (HttpServletRequest request, HttpServletResponse response) {
 
-        log.info("request.header: {}", request.getHeaderNames());
+        log.info("request.user-agent: {}", request.getHeader("user-agent"));
+        log.info("request.X-WX-OPENID: {}", request.getHeader("X-WX-OPENID"));
         return WxContext.builder()
                 .openId(getOpenId(request))
                 .unionId(getUnionId(request))
