@@ -23,6 +23,7 @@ public class WxContextBuilder {
 
     public WxContext build (HttpServletRequest request, HttpServletResponse response) {
 
+        log.info("request.header: {}", request.getHeaderNames());
         return WxContext.builder()
                 .openId(getOpenId(request))
                 .unionId(getUnionId(request))
