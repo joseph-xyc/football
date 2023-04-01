@@ -25,6 +25,12 @@ public class FtAccountPo {
 
     private String username;
 
+    private String openId;
+
+    private String sourceFrom;
+
+    private Integer accountStatus;
+
     @TableLogic
     private Integer isDeleted;
 

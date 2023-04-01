@@ -20,7 +20,7 @@ public class FilterConfig {
     public FilterRegistrationBean<WxAppFilter> wxAppFilterBean() {
         FilterRegistrationBean<WxAppFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(wxAppFilter);
-        registrationBean.addUrlPatterns("/web_api/*");
+        registrationBean.addUrlPatterns("/api/web_api/*");
         return registrationBean;
     }
 }
