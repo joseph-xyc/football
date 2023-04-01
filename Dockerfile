@@ -1,7 +1,7 @@
-FROM centos as centos
-
-COPY --from=centos /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo "Asia/Shanghai" > /etc/timezone
+#FROM centos as centos
+#
+#COPY --from=centos /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+#RUN echo "Asia/Shanghai" > /etc/timezone
 
 # Use the official maven/Java 8 image to create a build artifact.
 # https://hub.docker.com/_/maven
@@ -13,6 +13,9 @@ WORKDIR /app
 # 这里看下所有模块的pom文件是否可以拆分出来去执行package，从而利用docker的缓存
 COPY pom.xml .
 COPY . ./
+
+ENV TZ="Asia/Shanghai"
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
 
 # Build a release artifact.
 # RUN mvn package -DskipTests
