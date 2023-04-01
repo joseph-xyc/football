@@ -6,10 +6,7 @@ import com.glowworm.football.booking.domain.context.WxContext;
 import com.glowworm.football.booking.service.account.IAccountService;
 import com.glowworm.football.booking.service.account.IAccountVisitLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,7 +37,7 @@ public class AccountController {
     }
 
     @PostMapping(value = "/register_account")
-    public void registerAccount (WxContext ctx, CreateAccountVo createAccountVo) {
+    public void registerAccount (WxContext ctx, @RequestBody CreateAccountVo createAccountVo) {
 
         AccountBean accountBean = AccountBean.builder()
                 .username(createAccountVo.getUsername())
