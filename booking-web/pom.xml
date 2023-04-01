@@ -29,6 +29,7 @@
     </dependencies>
 
     <build>
+        <finalName>app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -39,6 +40,9 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/release</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
