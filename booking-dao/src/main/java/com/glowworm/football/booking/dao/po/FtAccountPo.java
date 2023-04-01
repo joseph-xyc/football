@@ -31,6 +31,10 @@ public class FtAccountPo {
 
     private Integer accountStatus;
 
+    private String avatar;
+
+    private Integer sex;
+
     @TableLogic
     private Integer isDeleted;
 

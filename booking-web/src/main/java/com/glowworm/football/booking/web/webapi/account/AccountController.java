@@ -1,11 +1,13 @@
 package com.glowworm.football.booking.web.webapi.account;
 
 import com.glowworm.football.booking.domain.account.AccountBean;
+import com.glowworm.football.booking.domain.account.CreateAccountVo;
 import com.glowworm.football.booking.domain.context.WxContext;
 import com.glowworm.football.booking.service.account.IAccountService;
 import com.glowworm.football.booking.service.account.IAccountVisitLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +31,23 @@ public class AccountController {
     public List<AccountBean> queryAccount (WxContext ctx) {
 
         return accountService.queryAccount(ctx);
+    }
+
+    @GetMapping(value = "/get_account")
+    public AccountBean getAccount (WxContext ctx) {
+
+        return accountService.getAccount(ctx.getOpenId());
+    }
+
+    @PostMapping(value = "/register_account")
+    public void registerAccount (WxContext ctx, CreateAccountVo createAccountVo) {
+
+        AccountBean accountBean = AccountBean.builder()
+                .username(createAccountVo.getUsername())
+                .avatar(createAccountVo.getAvatar())
+                .sex(createAccountVo.getSex())
+                .build();
+        accountService.registerAccount(ctx, accountBean);
     }
 
     @GetMapping(value = "/visit_log")

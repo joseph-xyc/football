@@ -20,6 +20,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 ---
+# 调试模式
+spring:
+  profiles: debug
+  datasource:
+    url: jdbc:mysql://sh-cynosdbmysql-grp-9cx0m3na.sql.tencentcdb.com:28064/football?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    username: football
+    password: football66!!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+---
 # 生产环境
 spring:
   profiles: prod

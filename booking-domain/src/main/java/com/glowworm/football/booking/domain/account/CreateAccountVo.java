@@ -9,7 +9,9 @@ import lombok.Data;
 @Data
 public class CreateAccountVo {
 
-    private Long id;
-
     private String username;
+
+    private String avatar;
+
+    private Integer sex;
 }

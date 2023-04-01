@@ -13,8 +13,11 @@ import java.util.List;
  */
 public interface IAccountService extends IService<FtAccountPo> {
 
+    AccountBean getAccount (String openId);
 
     List<AccountBean> queryAccount (WxContext ctx);
+
+    void registerAccount (WxContext ctx, AccountBean accountBean);
 
     void createAccount (AccountBean accountBean);
 
