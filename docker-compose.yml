@@ -1,0 +1,28 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.development
+    volumes:
+      - .:/app
+    ports:
+      - '27081:80'
+    container_name: wxcloud_football
+    labels:
+      - wxPort=27082
+      - hostPort=27081
+      - wxcloud=football
+      - role=container
+    environment:
+      - MYSQL_USERNAME=
+      - MYSQL_PASSWORD=
+      - MYSQL_ADDRESS=
+      - >-
+        MYSQL_ADDRESS=jdbc:mysql://10.1.102.45:3306/football?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+      - MYSQL_USERNAME=football
+      - MYSQL_PASSWORD=football66!!
+networks:
+  default:
+    external:
+      name: wxcb0
