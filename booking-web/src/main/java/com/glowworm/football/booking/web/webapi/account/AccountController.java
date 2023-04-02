@@ -3,12 +3,14 @@ package com.glowworm.football.booking.web.webapi.account;
 import com.glowworm.football.booking.domain.account.AccountBean;
 import com.glowworm.football.booking.domain.account.CreateAccountVo;
 import com.glowworm.football.booking.domain.context.WxContext;
+import com.glowworm.football.booking.domain.response.Response;
 import com.glowworm.football.booking.service.account.IAccountService;
 import com.glowworm.football.booking.service.account.IAccountVisitLogService;
+import com.glowworm.football.booking.web.webapi.BaseController;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * @author xuyongchang
@@ -16,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/web_api/account")
-public class AccountController {
+public class AccountController extends BaseController {
 
     @Autowired
     private IAccountService accountService;
@@ -24,20 +26,14 @@ public class AccountController {
     @Autowired
     private IAccountVisitLogService accountVisitLogService;
 
-    @GetMapping(value = "/query_account")
-    public List<AccountBean> queryAccount (WxContext ctx) {
+    @GetMapping(value = "/account_info")
+    public Response<AccountBean> accountInfo (WxContext ctx) {
 
-        return accountService.queryAccount(ctx);
-    }
-
-    @GetMapping(value = "/get_account")
-    public AccountBean getAccount (WxContext ctx) {
-
-        return accountService.getAccount(ctx.getOpenId());
+        return Response.success(accountService.getAccount(ctx.getOpenId()));
     }
 
     @PostMapping(value = "/register_account")
-    public void registerAccount (WxContext ctx, @RequestBody CreateAccountVo createAccountVo) {
+    public Response<String> registerAccount (WxContext ctx, @RequestBody CreateAccountVo createAccountVo) {
 
         AccountBean accountBean = AccountBean.builder()
                 .username(createAccountVo.getUsername())
@@ -45,11 +41,15 @@ public class AccountController {
                 .sex(createAccountVo.getSex())
                 .build();
         accountService.registerAccount(ctx, accountBean);
+
+        return Response.success(Strings.EMPTY);
     }
 
     @GetMapping(value = "/visit_log")
-    public void visitLog (WxContext ctx) {
+    public Response<String> visitLog (WxContext ctx) {
 
         accountVisitLogService.log(ctx);
+
+        return Response.success(Strings.EMPTY);
     }
 }

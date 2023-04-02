@@ -19,6 +19,4 @@ public interface IAccountService extends IService<FtAccountPo> {
 
     void registerAccount (WxContext ctx, AccountBean accountBean);
 
-    void createAccount (AccountBean accountBean);
-
 }

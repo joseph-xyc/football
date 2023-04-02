@@ -7,14 +7,17 @@ import com.glowworm.football.booking.dao.po.FtAccountPo;
 import com.glowworm.football.booking.domain.account.AccountBean;
 import com.glowworm.football.booking.domain.context.WxContext;
 import com.glowworm.football.booking.service.account.IAccountService;
+import com.glowworm.football.booking.service.account.config.AccountConfig;
 import com.glowworm.football.booking.service.util.FtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -25,16 +28,31 @@ import java.util.stream.Collectors;
 @Service
 public class AccountServiceImpl extends ServiceImpl<FtAccountMapper, FtAccountPo> implements IAccountService {
 
+    @Autowired
+    private AccountConfig accountConfig;
+
     @Override
     public AccountBean getAccount(String openId) {
 
         if (Strings.isEmpty(openId)) {
-            return null;
+            return visitorAccount();
         }
 
         FtAccountPo account = this.getOne(Wrappers.lambdaQuery(FtAccountPo.class).eq(FtAccountPo::getOpenId, openId));
+        if (Objects.isNull(account)) {
+            return visitorAccount();
+        }
 
         return FtUtil.copy(account, AccountBean.class);
+    }
+
+    private AccountBean visitorAccount () {
+
+        return AccountBean.builder()
+                .id(accountConfig.getVisitorAccountId())
+                .openId(accountConfig.getVisitorOpenId())
+                .username(accountConfig.getVisitorName())
+                .build();
     }
 
     @Override
@@ -69,10 +87,4 @@ public class AccountServiceImpl extends ServiceImpl<FtAccountMapper, FtAccountPo
         this.save(account);
     }
 
-    @Override
-    public void createAccount(AccountBean accountBean) {
-
-        FtAccountPo accountPo = FtUtil.copy(accountBean, FtAccountPo.class);
-        this.save(accountPo);
-    }
 }
