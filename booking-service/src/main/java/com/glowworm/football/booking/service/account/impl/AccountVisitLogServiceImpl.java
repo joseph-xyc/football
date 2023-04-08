@@ -3,13 +3,12 @@ package com.glowworm.football.booking.service.account.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.glowworm.football.booking.dao.mapper.FtAccountVisitLogMapper;
-import com.glowworm.football.booking.dao.po.FtAccountVisitLogPo;
+import com.glowworm.football.booking.dao.po.account.FtAccountVisitLogPo;
 import com.glowworm.football.booking.domain.context.WxContext;
 import com.glowworm.football.booking.service.account.IAccountVisitLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 

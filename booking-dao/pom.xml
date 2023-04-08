@@ -14,6 +14,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.glowworm</groupId>
+            <artifactId>booking-domain</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql-driver}</version>

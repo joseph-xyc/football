@@ -3,7 +3,7 @@ package com.glowworm.football.booking.service.account.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.glowworm.football.booking.dao.mapper.FtAccountMapper;
-import com.glowworm.football.booking.dao.po.FtAccountPo;
+import com.glowworm.football.booking.dao.po.account.FtAccountPo;
 import com.glowworm.football.booking.domain.account.AccountBean;
 import com.glowworm.football.booking.domain.context.WxContext;
 import com.glowworm.football.booking.service.account.IAccountService;

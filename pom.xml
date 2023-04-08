@@ -38,6 +38,8 @@
 
         <mysql-driver>8.0.23</mysql-driver>
 
+        <guava.version>24.0-jre</guava.version>
+
     </properties>
 
     <dependencies>
@@ -52,6 +54,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
     </dependencies>
