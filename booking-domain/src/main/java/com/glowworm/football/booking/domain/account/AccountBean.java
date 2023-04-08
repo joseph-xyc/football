@@ -1,21 +1,32 @@
 package com.glowworm.football.booking.domain.account;
 
-import com.glowworm.football.booking.dao.po.FtAccountPo;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
+
+import java.sql.Timestamp;
 
 /**
  * @author xuyongchang
  * @date 2023/3/23
  */
 @Data
-@SuperBuilder
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class AccountBean extends FtAccountPo {
+@Builder
+public class AccountBean {
 
+    private Long id;
+
+    private String username;
+
+    private String openId;
+
+    private String sourceFrom;
+
+    private Integer accountStatus;
+
+    private String avatar;
+
+    private Integer sex;
+
+    private Timestamp ctime;
+
+    private Timestamp mtime;
 }

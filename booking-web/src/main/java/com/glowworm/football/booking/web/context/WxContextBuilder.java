@@ -23,15 +23,11 @@ public class WxContextBuilder {
 
     public WxContext build (HttpServletRequest request, HttpServletResponse response) {
 
-        log.info("openId: {}", getOpenId(request));
-        WxContext ctx = WxContext.builder()
+        return WxContext.builder()
                 .openId(getOpenId(request))
                 .unionId(getUnionId(request))
                 .wxSource(getWxSource(request))
                 .build();
-        log.info("ctx: {}", ctx);
-
-        return ctx;
     }
 
     private String getOpenId (HttpServletRequest request) {

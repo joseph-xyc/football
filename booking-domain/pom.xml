@@ -12,11 +12,7 @@
     <artifactId>booking-domain</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.glowworm</groupId>
-            <artifactId>booking-dao</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
+
     </dependencies>
 
 
