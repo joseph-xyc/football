@@ -33,6 +33,8 @@ public class StadiumBean {
 
     private StadiumStatus stadiumStatus;
 
+    private String mainImageUrl;
+
     /**
      * 球场内的场地list
      */

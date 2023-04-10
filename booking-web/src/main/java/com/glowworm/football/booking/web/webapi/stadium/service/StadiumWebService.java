@@ -44,6 +44,7 @@ public class StadiumWebService {
                     .address(item.getAddress())
                     .district(item.getDistrict())
                     .stadiumStatus(item.getStadiumStatus().getCode())
+                    .mainImageUrl(item.getMainImageUrl())
                     .swardTypeList(swardTypeList)
                     .scaleTypeList(scaleTypeList)
                     .build();

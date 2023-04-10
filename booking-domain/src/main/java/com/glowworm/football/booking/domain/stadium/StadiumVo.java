@@ -28,6 +28,8 @@ public class StadiumVo {
 
     private Integer stadiumStatus;
 
+    private String mainImageUrl;
+
     /**
      * 草皮类型
      */
