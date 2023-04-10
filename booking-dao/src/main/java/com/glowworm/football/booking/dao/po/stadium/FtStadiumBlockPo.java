@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.glowworm.football.booking.domain.stadium.enums.ScaleType;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumBlockStatus;
+import com.glowworm.football.booking.domain.stadium.enums.SwardType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,9 +29,9 @@ public class FtStadiumBlockPo {
 
     private String blockName;
 
-    private Integer scaleType;
+    private ScaleType scaleType;
 
-    private Integer swardType;
+    private SwardType swardType;
 
     private StadiumBlockStatus blockStatus;
 
