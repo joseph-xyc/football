@@ -11,7 +11,7 @@ FROM maven:3.5-jdk-8-alpine as builder
 WORKDIR /app
 
 # 这里看下所有模块的pom文件是否可以拆分出来去执行package，从而利用docker的缓存
-#COPY pom.xml .
+COPY pom.xml .
 COPY . ./
 
 ENV TZ="Asia/Shanghai"

@@ -1,6 +1,5 @@
 package com.glowworm.football.booking.domain.stadium;
 
-import com.glowworm.football.booking.domain.stadium.enums.StadiumStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
