@@ -12,7 +12,7 @@ WORKDIR /app
 
 # 这里看下所有模块的pom文件是否可以拆分出来去执行package，从而利用docker的缓存
 #COPY pom.xml .
-COPY booking-web/release/ ./
+COPY . ./
 
 ENV TZ="Asia/Shanghai"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
