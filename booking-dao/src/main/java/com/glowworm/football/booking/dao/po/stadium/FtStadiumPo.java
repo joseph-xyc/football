@@ -29,7 +29,7 @@ public class FtStadiumPo {
 
     private Integer district;
 
-    private Integer contactPerson;
+    private String contactPerson;
 
     private Integer contactPhone;
 

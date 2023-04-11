@@ -26,7 +26,7 @@ public class StadiumInfoVo {
 
     private Integer district;
 
-    private Integer contactPerson;
+    private String contactPerson;
 
     private Integer contactPhone;
 

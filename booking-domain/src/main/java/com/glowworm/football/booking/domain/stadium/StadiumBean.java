@@ -27,7 +27,7 @@ public class StadiumBean {
 
     private Integer district;
 
-    private Integer contactPerson;
+    private String contactPerson;
 
     private Integer contactPhone;
 
