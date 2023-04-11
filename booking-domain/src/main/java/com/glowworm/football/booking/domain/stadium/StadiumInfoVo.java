@@ -28,7 +28,7 @@ public class StadiumInfoVo {
 
     private String contactPerson;
 
-    private Integer contactPhone;
+    private String contactPhone;
 
     /**
      * 球场内的场地list

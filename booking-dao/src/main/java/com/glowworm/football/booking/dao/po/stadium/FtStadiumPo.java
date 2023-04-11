@@ -31,7 +31,7 @@ public class FtStadiumPo {
 
     private String contactPerson;
 
-    private Integer contactPhone;
+    private String contactPhone;
 
     private StadiumStatus stadiumStatus;
 
