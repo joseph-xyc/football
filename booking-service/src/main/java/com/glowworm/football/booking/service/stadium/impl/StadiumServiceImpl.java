@@ -1,20 +1,17 @@
 package com.glowworm.football.booking.service.stadium.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.glowworm.football.booking.dao.mapper.FtStadiumBlockMapper;
 import com.glowworm.football.booking.dao.mapper.FtStadiumImageMapper;
 import com.glowworm.football.booking.dao.mapper.FtStadiumMapper;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumImagePo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.domain.context.WxContext;
-import com.glowworm.football.booking.domain.stadium.QueryStadiumVo;
-import com.glowworm.football.booking.domain.stadium.StadiumBean;
-import com.glowworm.football.booking.domain.stadium.StadiumBlockBean;
+import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumBlockStatus;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumImageType;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumStatus;
-import com.glowworm.football.booking.service.stadium.IStadiumBlockService;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
 import com.glowworm.football.booking.service.util.FtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -36,10 +33,13 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class StadiumServiceImpl extends ServiceImpl<FtStadiumMapper, FtStadiumPo> implements IStadiumService {
+public class StadiumServiceImpl implements IStadiumService {
 
     @Autowired
-    private IStadiumBlockService stadiumBlockService;
+    private FtStadiumMapper stadiumMapper;
+
+    @Autowired
+    private FtStadiumBlockMapper ftStadiumBlockMapper;
 
     @Autowired
     private FtStadiumImageMapper ftStadiumImageMapper;
@@ -47,7 +47,7 @@ public class StadiumServiceImpl extends ServiceImpl<FtStadiumMapper, FtStadiumPo
     @Override
     public List<StadiumBean> queryList(WxContext ctx, QueryStadiumVo query) {
 
-        List<FtStadiumPo> stadiumList = this.list(Wrappers.lambdaQuery(FtStadiumPo.class)
+        List<FtStadiumPo> stadiumList = stadiumMapper.selectList(Wrappers.lambdaQuery(FtStadiumPo.class)
                 .eq(FtStadiumPo::getStadiumStatus, StadiumStatus.ENABLE.getCode())
                 .like(Objects.nonNull(query.getStadiumName()), FtStadiumPo::getStadiumName, query.getStadiumName()));
 
@@ -60,7 +60,7 @@ public class StadiumServiceImpl extends ServiceImpl<FtStadiumMapper, FtStadiumPo
         // 查询所有球场的场地list
         List<Long> stadiumIds = stadiumList.stream().map(FtStadiumPo::getId).collect(Collectors.toList());
 
-        List<FtStadiumBlockPo> stadiumBlockList = stadiumBlockService.list(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
+        List<FtStadiumBlockPo> stadiumBlockList = ftStadiumBlockMapper.selectList(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
                 .in(FtStadiumBlockPo::getStadiumId, stadiumIds)
                 .eq(FtStadiumBlockPo::getBlockStatus, StadiumBlockStatus.ENABLE.getCode()));
 
@@ -90,5 +90,41 @@ public class StadiumServiceImpl extends ServiceImpl<FtStadiumMapper, FtStadiumPo
         }).collect(Collectors.toList());
 
         return result;
+    }
+
+    @Override
+    public StadiumInfoVo getDetail(WxContext ctx, Long id) {
+
+        // 球场
+        FtStadiumPo stadiumPo = stadiumMapper.selectById(id);
+
+        // 场地
+        List<FtStadiumBlockPo> blockList = ftStadiumBlockMapper.selectList(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
+                .eq(FtStadiumBlockPo::getStadiumId, id)
+                .eq(FtStadiumBlockPo::getBlockStatus, StadiumBlockStatus.ENABLE.getCode()));
+        List<StadiumBlockVo> blockVoList = blockList.stream().map(item -> StadiumBlockVo.builder()
+                        .id(item.getId())
+                        .stadiumId(item.getStadiumId())
+                        .blockName(item.getBlockName())
+                        .scaleType(item.getScaleType().getCode())
+                        .scaleTypeDesc(item.getScaleType().getDesc())
+                        .swardType(item.getSwardType().getCode())
+                        .swardTypeDesc(item.getSwardType().getDesc())
+                        .build())
+                .collect(Collectors.toList());
+
+
+        // 球场图片
+        List<FtStadiumImagePo> imageList = ftStadiumImageMapper.selectList(Wrappers.lambdaQuery(FtStadiumImagePo.class)
+                .eq(FtStadiumImagePo::getStadiumId, id)
+                .orderByAsc(FtStadiumImagePo::getImageType)
+                .orderByDesc(FtStadiumImagePo::getMtime));
+        List<String> images = imageList.stream().map(FtStadiumImagePo::getUrl).collect(Collectors.toList());
+
+        StadiumInfoVo stadiumVo = FtUtil.copy(stadiumPo, StadiumInfoVo.class);
+        stadiumVo.setBlockList(blockVoList);
+        stadiumVo.setImages(images);
+
+        return stadiumVo;
     }
 }

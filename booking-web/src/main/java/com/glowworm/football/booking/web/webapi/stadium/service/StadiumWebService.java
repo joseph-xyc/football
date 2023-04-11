@@ -1,10 +1,7 @@
 package com.glowworm.football.booking.web.webapi.stadium.service;
 
 import com.glowworm.football.booking.domain.context.WxContext;
-import com.glowworm.football.booking.domain.stadium.QueryStadiumVo;
-import com.glowworm.football.booking.domain.stadium.StadiumBean;
-import com.glowworm.football.booking.domain.stadium.StadiumBlockBean;
-import com.glowworm.football.booking.domain.stadium.StadiumVo;
+import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +46,10 @@ public class StadiumWebService {
                     .scaleTypeList(scaleTypeList)
                     .build();
         }).collect(Collectors.toList());
+    }
+
+    public StadiumInfoVo getDetail (WxContext ctx, Long id) {
+
+        return stadiumService.getDetail(ctx, id);
     }
 }
