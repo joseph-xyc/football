@@ -1,7 +1,7 @@
 package com.glowworm.football.booking.web.webapi.stadium;
 
-import com.glowworm.football.booking.domain.context.WxContext;
-import com.glowworm.football.booking.domain.response.Response;
+import com.glowworm.football.booking.domain.common.context.WxContext;
+import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.domain.stadium.QueryStadiumVo;
 import com.glowworm.football.booking.domain.stadium.StadiumInfoVo;
 import com.glowworm.football.booking.domain.stadium.StadiumVo;

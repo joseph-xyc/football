@@ -7,7 +7,7 @@ import com.glowworm.football.booking.dao.mapper.FtStadiumMapper;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumImagePo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
-import com.glowworm.football.booking.domain.context.WxContext;
+import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumBlockStatus;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumImageType;

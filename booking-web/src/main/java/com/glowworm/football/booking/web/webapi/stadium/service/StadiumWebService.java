@@ -1,6 +1,6 @@
 package com.glowworm.football.booking.web.webapi.stadium.service;
 
-import com.glowworm.football.booking.domain.context.WxContext;
+import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
 import lombok.extern.slf4j.Slf4j;

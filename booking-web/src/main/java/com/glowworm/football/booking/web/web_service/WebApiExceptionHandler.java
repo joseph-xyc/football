@@ -1,6 +1,6 @@
 package com.glowworm.football.booking.web.web_service;
 
-import com.glowworm.football.booking.domain.response.Response;
+import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.web.error.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;

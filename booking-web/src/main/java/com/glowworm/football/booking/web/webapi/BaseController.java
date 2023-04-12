@@ -1,6 +1,6 @@
 package com.glowworm.football.booking.web.webapi;
 
-import com.glowworm.football.booking.domain.response.Response;
+import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.web.web_service.WebApiExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ExceptionHandler;

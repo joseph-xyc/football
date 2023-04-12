@@ -1,6 +1,6 @@
 package com.glowworm.football.booking.web.context;
 
-import com.glowworm.football.booking.domain.context.WxContext;
+import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.web.config.WebConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
