@@ -7,13 +7,15 @@ import com.glowworm.football.booking.dao.mapper.FtStadiumMapper;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumImagePo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
-import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumBlockStatus;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumImageType;
 import com.glowworm.football.booking.domain.stadium.enums.StadiumStatus;
+import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
+import com.glowworm.football.booking.domain.stadium.vo.StadiumBlockVo;
+import com.glowworm.football.booking.domain.stadium.vo.StadiumInfoVo;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
-import com.glowworm.football.booking.service.util.FtUtil;
+import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +47,10 @@ public class StadiumServiceImpl implements IStadiumService {
     private FtStadiumImageMapper ftStadiumImageMapper;
 
     @Override
-    public List<StadiumBean> queryList(WxContext ctx, QueryStadiumVo query) {
+    public List<StadiumBean> queryList(QueryStadium query) {
 
         List<FtStadiumPo> stadiumList = stadiumMapper.selectList(Wrappers.lambdaQuery(FtStadiumPo.class)
+                .eq(Objects.nonNull(query.getId()), FtStadiumPo::getId, query.getId())
                 .eq(FtStadiumPo::getStadiumStatus, StadiumStatus.ENABLE.getCode())
                 .like(Objects.nonNull(query.getStadiumName()), FtStadiumPo::getStadiumName, query.getStadiumName()));
 
@@ -62,6 +65,7 @@ public class StadiumServiceImpl implements IStadiumService {
 
         List<FtStadiumBlockPo> stadiumBlockList = ftStadiumBlockMapper.selectList(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
                 .in(FtStadiumBlockPo::getStadiumId, stadiumIds)
+                .eq(Objects.nonNull(query.getBlockId()), FtStadiumBlockPo::getId, query.getBlockId())
                 .eq(FtStadiumBlockPo::getBlockStatus, StadiumBlockStatus.ENABLE.getCode()));
 
         // 按球场ID聚合场地list
@@ -78,9 +82,9 @@ public class StadiumServiceImpl implements IStadiumService {
 
         // 封装
         List<StadiumBean> result = stadiumMap.entrySet().stream().map(entry -> {
-            StadiumBean stadiumBean = FtUtil.copy(entry.getValue(), StadiumBean.class);
+            StadiumBean stadiumBean = Utils.copy(entry.getValue(), StadiumBean.class);
             List<FtStadiumBlockPo> blocks = stadiumId2BlockMap.getOrDefault(entry.getKey(), Collections.emptyList());
-            stadiumBean.setBlockList(FtUtil.copy(blocks, StadiumBlockBean.class));
+            stadiumBean.setBlockList(Utils.copy(blocks, StadiumBlockBean.class));
 
             // 首图
             String imageUrl = stadiumId2ImageUrlMap.getOrDefault(entry.getKey(), Strings.EMPTY);
@@ -93,7 +97,7 @@ public class StadiumServiceImpl implements IStadiumService {
     }
 
     @Override
-    public StadiumInfoVo getDetail(WxContext ctx, Long id) {
+    public StadiumInfoVo getDetail(Long id) {
 
         // 球场
         FtStadiumPo stadiumPo = stadiumMapper.selectById(id);
@@ -121,7 +125,7 @@ public class StadiumServiceImpl implements IStadiumService {
                 .orderByDesc(FtStadiumImagePo::getMtime));
         List<String> images = imageList.stream().map(FtStadiumImagePo::getUrl).collect(Collectors.toList());
 
-        StadiumInfoVo stadiumVo = FtUtil.copy(stadiumPo, StadiumInfoVo.class);
+        StadiumInfoVo stadiumVo = Utils.copy(stadiumPo, StadiumInfoVo.class);
         stadiumVo.setBlockList(blockVoList);
         stadiumVo.setImages(images);
 

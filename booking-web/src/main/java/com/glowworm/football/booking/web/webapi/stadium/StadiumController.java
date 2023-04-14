@@ -2,9 +2,9 @@ package com.glowworm.football.booking.web.webapi.stadium;
 
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.response.Response;
-import com.glowworm.football.booking.domain.stadium.QueryStadiumVo;
-import com.glowworm.football.booking.domain.stadium.StadiumInfoVo;
-import com.glowworm.football.booking.domain.stadium.StadiumVo;
+import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
+import com.glowworm.football.booking.domain.stadium.vo.StadiumInfoVo;
+import com.glowworm.football.booking.domain.stadium.vo.StadiumVo;
 import com.glowworm.football.booking.web.webapi.BaseController;
 import com.glowworm.football.booking.web.webapi.stadium.service.StadiumWebService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class StadiumController extends BaseController {
     @Autowired
     private StadiumWebService stadiumWebService;
     @GetMapping(value = "/list")
-    public Response<List<StadiumVo>> queryList (WxContext ctx, QueryStadiumVo query) {
+    public Response<List<StadiumVo>> queryList (WxContext ctx, QueryStadium query) {
 
         return Response.success(stadiumWebService.queryList(ctx, query));
     }

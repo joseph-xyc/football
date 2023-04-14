@@ -1,7 +1,7 @@
 package com.glowworm.football.booking.web.webapi.user;
 
 import com.glowworm.football.booking.domain.user.UserBean;
-import com.glowworm.football.booking.domain.user.CreateUserVo;
+import com.glowworm.football.booking.domain.user.vo.CreateUserVo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.service.user.IUserService;

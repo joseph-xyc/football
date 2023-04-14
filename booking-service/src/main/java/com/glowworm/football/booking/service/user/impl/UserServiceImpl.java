@@ -7,7 +7,7 @@ import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.service.user.IUserService;
 import com.glowworm.football.booking.service.user.config.UserConfig;
-import com.glowworm.football.booking.service.util.FtUtil;
+import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements IUserService {
             return visitorUser();
         }
 
-        return FtUtil.copy(user, UserBean.class);
+        return Utils.copy(user, UserBean.class);
     }
 
     private UserBean visitorUser () {

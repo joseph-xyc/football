@@ -1,10 +1,9 @@
 package com.glowworm.football.booking.service.stadium;
 
 
-import com.glowworm.football.booking.domain.common.context.WxContext;
-import com.glowworm.football.booking.domain.stadium.QueryStadiumVo;
+import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
 import com.glowworm.football.booking.domain.stadium.StadiumBean;
-import com.glowworm.football.booking.domain.stadium.StadiumInfoVo;
+import com.glowworm.football.booking.domain.stadium.vo.StadiumInfoVo;
 
 import java.util.List;
 
@@ -14,8 +13,8 @@ import java.util.List;
  */
 public interface IStadiumService {
 
-    List<StadiumBean> queryList (WxContext ctx, QueryStadiumVo query);
+    List<StadiumBean> queryList (QueryStadium query);
 
-    StadiumInfoVo getDetail (WxContext ctx, Long id);
+    StadiumInfoVo getDetail (Long id);
 
 }
