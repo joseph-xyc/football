@@ -42,4 +42,11 @@ public class StadiumScheduleServiceImpl implements IStadiumScheduleService {
 
         return result;
     }
+
+    @Override
+    public StadiumScheduleBean getSchedule(Long id) {
+
+        FtStadiumSchedulePo schedulePo = scheduleMapper.selectById(id);
+        return Utils.copy(schedulePo, StadiumScheduleBean.class);
+    }
 }

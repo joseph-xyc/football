@@ -5,6 +5,7 @@ import com.glowworm.football.booking.dao.mapper.FtUserMapper;
 import com.glowworm.football.booking.dao.po.user.FtUserPo;
 import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.domain.common.context.WxContext;
+import com.glowworm.football.booking.domain.user.enums.UserType;
 import com.glowworm.football.booking.service.user.IUserService;
 import com.glowworm.football.booking.service.user.config.UserConfig;
 import com.glowworm.football.booking.service.util.Utils;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements IUserService {
                 .id(userConfig.getVisitorUserId())
                 .openId(userConfig.getVisitorOpenId())
                 .username(userConfig.getVisitorName())
+                .userType(UserType.VISITOR)
                 .build();
     }
 

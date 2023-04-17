@@ -5,7 +5,7 @@ import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
 import com.glowworm.football.booking.domain.stadium.vo.StadiumInfoVo;
 import com.glowworm.football.booking.domain.stadium.vo.StadiumVo;
-import com.glowworm.football.booking.web.webapi.BaseController;
+import com.glowworm.football.booking.web.webapi.base.BaseController;
 import com.glowworm.football.booking.web.webapi.stadium.service.StadiumWebService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

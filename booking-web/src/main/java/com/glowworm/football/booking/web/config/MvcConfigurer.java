@@ -1,6 +1,6 @@
 package com.glowworm.football.booking.web.config;
 
-import com.glowworm.football.booking.web.context.arg_resolver.WxContextArgResolver;
+import com.glowworm.football.booking.web.webapi.base.context.arg_resolver.WxContextArgResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

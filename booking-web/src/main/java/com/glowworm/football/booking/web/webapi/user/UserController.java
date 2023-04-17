@@ -6,7 +6,7 @@ import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.service.user.IUserService;
 import com.glowworm.football.booking.service.user.IUserVisitLogService;
-import com.glowworm.football.booking.web.webapi.BaseController;
+import com.glowworm.football.booking.web.webapi.base.BaseController;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,5 +1,6 @@
 package com.glowworm.football.booking.service.util;
 
+import com.glowworm.football.booking.domain.exception.ValidateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
@@ -23,14 +24,27 @@ public class Utils {
         return l != null && l.compareTo(0L) > 0;
     }
 
-    public static boolean isPositive(Double d) {
-        return d != null && d.compareTo(0.0) > 0;
-    }
-
     public static boolean isPositive(BigDecimal b) {
         return b != null && b.compareTo(BigDecimal.ZERO) > 0;
     }
 
+    public static <R> R isPositive(Integer i, R positive, R negative) {
+        return isPositive(i) ? positive : negative;
+    }
+
+    public static <R> R isPositive(Long l, R positive, R negative) {
+        return isPositive(l) ? positive : negative;
+    }
+
+    public static <R> R isPositive(BigDecimal b, R positive, R negative) {
+        return isPositive(b) ? positive : negative;
+    }
+
+    public static void isTrue (boolean expression, String message) {
+        if (!expression) {
+            throw new ValidateException(message);
+        }
+    }
 
     public static <T, S> List<T> copy (List<S> source, Class<T> clazz) {
 

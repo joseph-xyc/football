@@ -13,4 +13,6 @@ import java.util.List;
 public interface IStadiumScheduleService {
 
     List<StadiumScheduleBean> querySchedule (QuerySchedule query);
+
+    StadiumScheduleBean getSchedule (Long id);
 }

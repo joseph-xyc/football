@@ -4,6 +4,7 @@ import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
 import com.glowworm.football.booking.domain.stadium.vo.StadiumScheduleVo;
+import com.glowworm.football.booking.web.webapi.base.BaseController;
 import com.glowworm.football.booking.web.webapi.stadium.service.StadiumWebService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/web_api/stadium/schedule")
-public class ScheduleController {
+public class ScheduleController extends BaseController {
 
     @Autowired
     private StadiumWebService stadiumWebService;

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.glowworm.football.booking.domain.user.enums.UserType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -28,6 +29,8 @@ public class FtUserPo {
     private String sourceFrom;
 
     private Integer userStatus;
+
+    private UserType userType;
 
     private String avatar;
 

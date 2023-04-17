@@ -1,5 +1,6 @@
 package com.glowworm.football.booking.domain.user;
 
+import com.glowworm.football.booking.domain.user.enums.UserType;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -23,6 +24,8 @@ public class UserBean {
     private String sourceFrom;
 
     private Integer userStatus;
+
+    private UserType userType;
 
     private String avatar;
 

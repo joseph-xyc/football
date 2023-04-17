@@ -17,6 +17,11 @@ public enum ScheduleStatus {
 
     ENABLE(1, "可用"),
 
+    PLANNING(9, "组队中"),
+
+    BOOKED(10, "已预订"),
+
+
     ;
 
     @EnumValue

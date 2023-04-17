@@ -2,7 +2,7 @@ package com.glowworm.football.booking.web.filter;
 
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.web.config.WebConfig;
-import com.glowworm.football.booking.web.context.WxContextBuilder;
+import com.glowworm.football.booking.web.webapi.base.context.WxContextBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
