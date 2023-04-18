@@ -76,7 +76,7 @@ public class StadiumWebService {
                 .id(item.getId())
                 .stadiumId(item.getStadiumId())
                 .blockId(item.getBlockId())
-                .date(item.getDate())
+                .dateStr(DateUtils.getTimestamp2String(item.getDate()))
                 .clockBegin(item.getClockBegin().getDesc())
                 .clockEnd(item.getClockEnd().getDesc())
                 .isAfternoon(item.getClockBegin().getIsAfternoon().getCode())

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public enum ScheduleClock {
 
-    T_8(8, "8:00", TrueFalse.FALSE),
+    T_8(8, "08:00", TrueFalse.FALSE),
 
     T_10(10, "10:00", TrueFalse.FALSE),
 
