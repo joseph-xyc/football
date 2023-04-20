@@ -40,6 +40,12 @@ public class Utils {
         return isPositive(b) ? positive : negative;
     }
 
+    public static void throwError (boolean expression, String message) {
+        if (expression) {
+            throw new ValidateException(message);
+        }
+    }
+
     public static void isTrue (boolean expression, String message) {
         if (!expression) {
             throw new ValidateException(message);

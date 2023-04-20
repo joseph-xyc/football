@@ -25,7 +25,7 @@ public class StadiumScheduleVo {
 
     private Long blockId;
 
-    private String dateStr;
+    private Timestamp date;
 
     private String clockBegin;
 
