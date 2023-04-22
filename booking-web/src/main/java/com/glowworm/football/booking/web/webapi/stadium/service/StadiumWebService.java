@@ -82,7 +82,7 @@ public class StadiumWebService {
                 .isAfternoon(item.getClockBegin().getIsAfternoon().getCode())
                 .weekName(DateUtils.getWeekName(item.getDate()))
                 .isWeekend(DateUtils.isWeekend(item.getDate()))
-                .status(item.getStatus().getDesc())
+                .status(item.getStatus().getCode())
                 .build())
                 .collect(Collectors.toList());
     }

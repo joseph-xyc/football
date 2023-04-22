@@ -37,5 +37,5 @@ public class StadiumScheduleVo {
 
     private Integer isWeekend;
 
-    private String status;
+    private Integer status;
 }
