@@ -1,7 +1,6 @@
 package com.glowworm.football.booking.service.car.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.glowworm.football.booking.dao.mapper.FtCarMapper;
 import com.glowworm.football.booking.dao.mapper.FtPassengerMapper;
@@ -104,6 +103,8 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
                 .scheduleId(formVo.getScheduleId())
                 .userId(user.getId())
                 .teamId(formVo.getTeamId())
+                .carName(formVo.getCarName())
+                .carTopic(formVo.getCarTopic())
                 .recruitNum(formVo.getRecruitNum())
                 .carType(CarType.getByCode(formVo.getCarType()))
                 .carStatus(CarStatus.WAITING)

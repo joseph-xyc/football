@@ -3,7 +3,8 @@ package com.glowworm.football.booking.web.webapi.stadium;
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
-import com.glowworm.football.booking.domain.stadium.vo.StadiumScheduleVo;
+import com.glowworm.football.booking.domain.stadium.vo.CombineScheduleVo;
+import com.glowworm.football.booking.domain.stadium.vo.ScheduleVo;
 import com.glowworm.football.booking.web.webapi.base.BaseController;
 import com.glowworm.football.booking.web.webapi.stadium.service.StadiumWebService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,14 @@ public class ScheduleController extends BaseController {
     private StadiumWebService stadiumWebService;
 
     @GetMapping(value = "/list")
-    public Response<List<StadiumScheduleVo>> queryList (WxContext ctx, QuerySchedule query) {
+    public Response<List<ScheduleVo>> queryList (WxContext ctx, QuerySchedule query) {
 
         return Response.success(stadiumWebService.queryScheduleList(query));
+    }
+
+    @GetMapping(value = "/combine_info")
+    public Response<CombineScheduleVo> combineInfo (WxContext ctx, QuerySchedule query) {
+
+        return Response.success(stadiumWebService.getCombineScheduleVo(query));
     }
 }

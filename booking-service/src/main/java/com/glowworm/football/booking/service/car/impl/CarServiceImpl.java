@@ -3,6 +3,7 @@ package com.glowworm.football.booking.service.car.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtCarMapper;
 import com.glowworm.football.booking.dao.po.car.FtCarPo;
+import com.glowworm.football.booking.domain.car.enums.CarStatus;
 import com.glowworm.football.booking.domain.car.query.QueryCar;
 import com.glowworm.football.booking.service.car.ICarService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ public class CarServiceImpl implements ICarService {
     public List<FtCarPo> queryCar(QueryCar query) {
 
         return carMapper.selectList(Wrappers.lambdaQuery(FtCarPo.class)
+                .in(FtCarPo::getCarStatus, CarStatus.WAITING, CarStatus.FULL, CarStatus.OVERLOAD)
                 .eq(Objects.nonNull(query.getScheduleId()), FtCarPo::getScheduleId, query.getScheduleId()));
     }
 }

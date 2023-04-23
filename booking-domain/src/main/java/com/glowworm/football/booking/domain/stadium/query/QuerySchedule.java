@@ -16,6 +16,8 @@ import java.util.List;
 @Builder
 public class QuerySchedule {
 
+    private Long id;
+
     private Long stadiumId;
 
     private Long blockId;

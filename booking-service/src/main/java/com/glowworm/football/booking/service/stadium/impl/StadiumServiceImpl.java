@@ -41,7 +41,7 @@ public class StadiumServiceImpl implements IStadiumService {
     private FtStadiumMapper stadiumMapper;
 
     @Autowired
-    private FtStadiumBlockMapper ftStadiumBlockMapper;
+    private FtStadiumBlockMapper blockMapper;
 
     @Autowired
     private FtStadiumImageMapper ftStadiumImageMapper;
@@ -63,7 +63,7 @@ public class StadiumServiceImpl implements IStadiumService {
         // 查询所有球场的场地list
         List<Long> stadiumIds = stadiumList.stream().map(FtStadiumPo::getId).collect(Collectors.toList());
 
-        List<FtStadiumBlockPo> stadiumBlockList = ftStadiumBlockMapper.selectList(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
+        List<FtStadiumBlockPo> stadiumBlockList = blockMapper.selectList(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
                 .in(FtStadiumBlockPo::getStadiumId, stadiumIds)
                 .eq(Objects.nonNull(query.getBlockId()), FtStadiumBlockPo::getId, query.getBlockId())
                 .eq(FtStadiumBlockPo::getBlockStatus, StadiumBlockStatus.ENABLE.getCode()));
@@ -103,7 +103,7 @@ public class StadiumServiceImpl implements IStadiumService {
         FtStadiumPo stadiumPo = stadiumMapper.selectById(id);
 
         // 场地
-        List<FtStadiumBlockPo> blockList = ftStadiumBlockMapper.selectList(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
+        List<FtStadiumBlockPo> blockList = blockMapper.selectList(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
                 .eq(FtStadiumBlockPo::getStadiumId, id)
                 .eq(FtStadiumBlockPo::getBlockStatus, StadiumBlockStatus.ENABLE.getCode()));
         List<StadiumBlockVo> blockVoList = blockList.stream().map(item -> StadiumBlockVo.builder()
@@ -130,5 +130,15 @@ public class StadiumServiceImpl implements IStadiumService {
         stadiumVo.setImages(images);
 
         return stadiumVo;
+    }
+
+    @Override
+    public FtStadiumPo getStadium(Long id) {
+        return stadiumMapper.selectById(id);
+    }
+
+    @Override
+    public FtStadiumBlockPo getBlock(Long id) {
+        return blockMapper.selectById(id);
     }
 }

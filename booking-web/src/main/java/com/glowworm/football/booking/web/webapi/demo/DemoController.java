@@ -4,8 +4,6 @@ import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.demo.query.QueryDemo;
 import com.glowworm.football.booking.domain.common.demo.vo.DemoVo;
 import com.glowworm.football.booking.domain.common.response.Response;
-import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
-import com.glowworm.football.booking.domain.stadium.vo.StadiumScheduleVo;
 import com.glowworm.football.booking.web.webapi.base.BaseController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

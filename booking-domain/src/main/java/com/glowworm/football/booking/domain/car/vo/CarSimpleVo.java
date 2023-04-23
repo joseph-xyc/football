@@ -20,7 +20,13 @@ public class CarSimpleVo {
 
     private Long scheduleId;
 
+    private Long userId;
+
     private String carName;
 
+    private String carTopic;
+
     private Integer carType;
+
+    private Integer isMyCar;
 }

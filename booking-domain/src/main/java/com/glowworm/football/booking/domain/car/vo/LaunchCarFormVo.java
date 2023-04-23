@@ -26,6 +26,8 @@ public class LaunchCarFormVo {
 
     private String carName;
 
+    private String carTopic;
+
     private Long teamId;
 
     private Integer recruitNum;

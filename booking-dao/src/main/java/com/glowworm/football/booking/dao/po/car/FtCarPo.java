@@ -32,6 +32,8 @@ public class FtCarPo {
 
     private String carName;
 
+    private String carTopic;
+
     private Long userId;
 
     private Long teamId;

@@ -1,12 +1,12 @@
 package com.glowworm.football.booking.web.webapi.stadium.service;
 
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
-import com.glowworm.football.booking.domain.stadium.vo.StadiumInfoVo;
-import com.glowworm.football.booking.domain.stadium.vo.StadiumScheduleVo;
-import com.glowworm.football.booking.domain.stadium.vo.StadiumVo;
+import com.glowworm.football.booking.domain.stadium.vo.*;
 import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
 import com.glowworm.football.booking.service.util.DateUtils;
@@ -64,7 +64,7 @@ public class StadiumWebService {
         return stadiumService.getDetail(id);
     }
 
-    public List<StadiumScheduleVo> queryScheduleList (QuerySchedule query) {
+    public List<ScheduleVo> queryScheduleList (QuerySchedule query) {
 
         List<StadiumScheduleBean> scheduleBeans = scheduleService.querySchedule(query);
 
@@ -72,7 +72,7 @@ public class StadiumWebService {
             return Collections.emptyList();
         }
 
-        return scheduleBeans.stream().map(item -> StadiumScheduleVo.builder()
+        return scheduleBeans.stream().map(item -> ScheduleVo.builder()
                 .id(item.getId())
                 .stadiumId(item.getStadiumId())
                 .blockId(item.getBlockId())
@@ -85,5 +85,33 @@ public class StadiumWebService {
                 .status(item.getStatus().getCode())
                 .build())
                 .collect(Collectors.toList());
+    }
+
+    public CombineScheduleVo getCombineScheduleVo (QuerySchedule query) {
+
+        FtStadiumPo stadium = stadiumService.getStadium(query.getStadiumId());
+        FtStadiumBlockPo block = stadiumService.getBlock(query.getBlockId());
+        StadiumScheduleBean schedule = scheduleService.getSchedule(query.getId());
+
+        return CombineScheduleVo.builder()
+                .stadium(StadiumVo.builder()
+                        .id(stadium.getId())
+                        .stadiumName(stadium.getStadiumName())
+                        .address(stadium.getAddress())
+                        .build())
+                .block(StadiumBlockVo.builder()
+                        .id(block.getId())
+                        .blockName(block.getBlockName())
+                        .scaleTypeDesc(block.getScaleType().getDesc())
+                        .swardTypeDesc(block.getSwardType().getDesc())
+                        .build())
+                .schedule(ScheduleVo.builder()
+                        .id(schedule.getId())
+                        .date(schedule.getDate())
+                        .clockBegin(schedule.getClockBegin().getDesc())
+                        .clockEnd(schedule.getClockEnd().getDesc())
+                        .isAfternoon(schedule.getClockBegin().getIsAfternoon().getCode())
+                        .build())
+                .build();
     }
 }

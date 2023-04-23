@@ -2,6 +2,8 @@ package com.glowworm.football.booking.web.webapi.car.service;
 
 import com.glowworm.football.booking.dao.po.car.FtCarPo;
 import com.glowworm.football.booking.domain.car.vo.CarSimpleVo;
+import com.glowworm.football.booking.domain.common.enums.TrueFalse;
+import com.glowworm.football.booking.domain.user.UserBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class CarWebService {
 
-    public List<CarSimpleVo> po2vo (List<FtCarPo> carPos) {
+    public List<CarSimpleVo> po2vo (UserBean user, List<FtCarPo> carPos) {
 
         if (CollectionUtils.isEmpty(carPos)) {
             return Collections.emptyList();
@@ -27,8 +29,10 @@ public class CarWebService {
         return carPos.stream().map(item -> CarSimpleVo.builder()
                 .id(item.getId())
                 .scheduleId(item.getScheduleId())
+                .userId(item.getUserId())
                 .carName(item.getCarName())
                 .carType(item.getCarType().getCode())
+                .isMyCar(TrueFalse.getByBoolean(item.getUserId().equals(user.getId())).getCode())
                 .build())
                 .collect(Collectors.toList());
     }

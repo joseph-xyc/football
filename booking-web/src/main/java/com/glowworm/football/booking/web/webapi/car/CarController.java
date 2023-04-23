@@ -37,7 +37,7 @@ public class CarController extends BaseController {
     public Response<List<CarSimpleVo>> queryList (WxContext ctx, QueryCar query) {
 
         List<FtCarPo> carPos = carService.queryCar(query);
-        return Response.success(carWebService.po2vo(carPos));
+        return Response.success(carWebService.po2vo(getUser(ctx), carPos));
     }
 
     @PostMapping(value = "/launch")
