@@ -29,6 +29,7 @@ public class CarServiceImpl implements ICarService {
 
         return carMapper.selectList(Wrappers.lambdaQuery(FtCarPo.class)
                 .in(FtCarPo::getCarStatus, CarStatus.WAITING, CarStatus.FULL, CarStatus.OVERLOAD)
+                .eq(Objects.nonNull(query.getStadiumId()), FtCarPo::getStadiumId, query.getStadiumId())
                 .eq(Objects.nonNull(query.getScheduleId()), FtCarPo::getScheduleId, query.getScheduleId()));
     }
 }

@@ -12,5 +12,7 @@ import lombok.Data;
 @Builder
 public class QueryCar {
 
+    private Long stadiumId;
+
     private Long scheduleId;
 }
