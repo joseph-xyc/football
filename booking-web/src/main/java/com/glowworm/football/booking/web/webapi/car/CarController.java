@@ -41,14 +41,14 @@ public class CarController extends BaseController {
     }
 
     @PostMapping(value = "/launch")
-    public Response<String> launch (WxContext ctx, LaunchCarFormVo launchCarFormVo) {
+    public Response<String> launch (WxContext ctx, @RequestBody LaunchCarFormVo launchCarFormVo) {
 
         carActionService.launch(getUser(ctx), launchCarFormVo);
         return Response.success(Strings.EMPTY);
     }
 
     @PostMapping(value = "/get_on")
-    public Response<String> getOn (WxContext ctx, GetOnFormVo getOnFormVo) {
+    public Response<String> getOn (WxContext ctx, @RequestBody GetOnFormVo getOnFormVo) {
 
         carActionService.getOn(getUser(ctx), getOnFormVo);
         return Response.success(Strings.EMPTY);

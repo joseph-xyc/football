@@ -28,5 +28,7 @@ public class CarSimpleVo {
 
     private Integer carType;
 
+    private Integer carStatus;
+
     private Integer isMyCar;
 }

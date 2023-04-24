@@ -32,6 +32,7 @@ public class CarWebService {
                 .userId(item.getUserId())
                 .carName(item.getCarName())
                 .carType(item.getCarType().getCode())
+                .carStatus(item.getCarStatus().getCode())
                 .isMyCar(TrueFalse.getByBoolean(item.getUserId().equals(user.getId())).getCode())
                 .build())
                 .collect(Collectors.toList());
