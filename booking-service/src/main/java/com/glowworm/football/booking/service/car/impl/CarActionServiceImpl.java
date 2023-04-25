@@ -112,7 +112,9 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
                 .passengerStatus(PassengerStatus.GET_ON)
                 .build();
 
-        saveOrUpdate(passengerPo);
+        saveOrUpdate(passengerPo, Wrappers.lambdaQuery(FtPassengerPo.class)
+                .eq(FtPassengerPo::getCarId, getOnFormVo.getCarId())
+                .eq(FtPassengerPo::getPassengerId, user.getId()));
     }
 
     private void validLaunch (UserBean user, LaunchCarFormVo formVo) {
