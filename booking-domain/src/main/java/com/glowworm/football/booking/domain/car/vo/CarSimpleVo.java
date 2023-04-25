@@ -30,7 +30,7 @@ public class CarSimpleVo {
 
     private Integer carStatus;
 
-    private Integer isMyCar;
+    private Integer isInTheCar;
 
     private Integer canDismiss;
 

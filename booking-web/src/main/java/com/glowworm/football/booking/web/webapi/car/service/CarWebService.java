@@ -17,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -32,21 +33,7 @@ public class CarWebService {
 
     public List<CarSimpleVo> listInSchedule (UserBean user, List<FtCarPo> carPos) {
 
-        if (CollectionUtils.isEmpty(carPos)) {
-            return Collections.emptyList();
-        }
-
-        List<CarSimpleVo> carVos = carPos.stream().map(item -> CarSimpleVo.builder()
-                        .id(item.getId())
-                        .scheduleId(item.getScheduleId())
-                        .userId(item.getUserId())
-                        .carName(item.getCarName())
-                        .carType(item.getCarType().getCode())
-                        .carStatus(item.getCarStatus().getCode())
-                        .isMyCar(TrueFalse.getByBoolean(item.getUserId().equals(user.getId())).getCode())
-                        .carTopic(item.getCarTopic())
-                        .build())
-                .collect(Collectors.toList());
+        List<CarSimpleVo> carVos = po2vo(user, carPos);
 
         // enhance可操作性
         enhanceOpt(user, carVos);
@@ -60,16 +47,20 @@ public class CarWebService {
             return Collections.emptyList();
         }
 
+        // 查询这些车下的乘客们(上车态的乘客)
+        List<Long> carIds = carPos.stream().map(FtCarPo::getId).collect(Collectors.toList());
+        Map<Long, List<FtPassengerPo>> passengerMap = queryPassengerMap(carIds, user.getId());
+
         return carPos.stream().map(item -> CarSimpleVo.builder()
-                        .id(item.getId())
-                        .scheduleId(item.getScheduleId())
-                        .userId(item.getUserId())
-                        .carName(item.getCarName())
-                        .carType(item.getCarType().getCode())
-                        .carStatus(item.getCarStatus().getCode())
-                        .isMyCar(TrueFalse.getByBoolean(item.getUserId().equals(user.getId())).getCode())
-                        .carTopic(item.getCarTopic())
-                        .build())
+                .id(item.getId())
+                .scheduleId(item.getScheduleId())
+                .userId(item.getUserId())
+                .carName(item.getCarName())
+                .carType(item.getCarType().getCode())
+                .carStatus(item.getCarStatus().getCode())
+                .isInTheCar(TrueFalse.getByBoolean(passengerMap.containsKey(item.getId())).getCode())
+                .carTopic(item.getCarTopic())
+                .build())
                 .collect(Collectors.toList());
     }
 
@@ -77,7 +68,7 @@ public class CarWebService {
 
         // 查询这些车下的乘客们(上车态的乘客)
         List<Long> carIds = cars.stream().map(CarSimpleVo::getId).collect(Collectors.toList());
-        Map<Long, List<FtPassengerPo>> passengerMap = queryPassengerMap(carIds);
+        Map<Long, List<FtPassengerPo>> passengerMap = queryPassengerMap(carIds, user.getId());
 
         // 司机的carId
         Long driverCarId = cars.stream()
@@ -86,10 +77,7 @@ public class CarWebService {
                 .findFirst().orElse(0L);
 
         // 乘客的carId
-        Long passengerCarId = passengerMap.entrySet().stream()
-                .filter(entry -> entry.getValue().stream()
-                        .anyMatch(item -> item.getPassengerId().equals(user.getId())))
-                .map(Map.Entry::getKey)
+        Long passengerCarId = passengerMap.keySet().stream()
                 .findFirst().orElse(0L);
 
         cars.forEach(item -> {
@@ -108,7 +96,7 @@ public class CarWebService {
         });
     }
 
-    private Map<Long, List<FtPassengerPo>> queryPassengerMap (List<Long> carIds) {
+    private Map<Long, List<FtPassengerPo>> queryPassengerMap (List<Long> carIds, Long userId) {
 
         if (CollectionUtils.isEmpty(carIds)) {
             return Collections.emptyMap();
@@ -116,6 +104,7 @@ public class CarWebService {
 
         List<FtPassengerPo> passengers = passengerMapper.selectList(Wrappers.lambdaQuery(FtPassengerPo.class)
                 .in(FtPassengerPo::getCarId, carIds)
+                .eq(Objects.nonNull(userId), FtPassengerPo::getPassengerId, userId)
                 .eq(FtPassengerPo::getPassengerStatus, PassengerStatus.GET_ON));
 
         if (CollectionUtils.isEmpty(passengers)) {
