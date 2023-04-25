@@ -5,6 +5,7 @@ import com.glowworm.football.booking.dao.mapper.FtCarMapper;
 import com.glowworm.football.booking.dao.po.car.FtCarPo;
 import com.glowworm.football.booking.domain.car.enums.CarStatus;
 import com.glowworm.football.booking.domain.car.query.QueryCar;
+import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.service.car.ICarService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class CarServiceImpl implements ICarService {
     private FtCarMapper carMapper;
 
     @Override
-    public List<FtCarPo> queryCar(QueryCar query) {
+    public List<FtCarPo> queryCar(UserBean user, QueryCar query) {
 
         return carMapper.selectList(Wrappers.lambdaQuery(FtCarPo.class)
                 .in(FtCarPo::getCarStatus, CarStatus.WAITING, CarStatus.FULL, CarStatus.OVERLOAD)

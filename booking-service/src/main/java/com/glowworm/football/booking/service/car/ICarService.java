@@ -2,6 +2,7 @@ package com.glowworm.football.booking.service.car;
 
 import com.glowworm.football.booking.dao.po.car.FtCarPo;
 import com.glowworm.football.booking.domain.car.query.QueryCar;
+import com.glowworm.football.booking.domain.user.UserBean;
 
 import java.util.List;
 
@@ -12,5 +13,5 @@ import java.util.List;
  */
 public interface ICarService {
 
-    List<FtCarPo> queryCar (QueryCar query);
+    List<FtCarPo> queryCar (UserBean user, QueryCar query);
 }

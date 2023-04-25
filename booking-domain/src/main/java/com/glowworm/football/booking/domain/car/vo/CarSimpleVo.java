@@ -31,4 +31,10 @@ public class CarSimpleVo {
     private Integer carStatus;
 
     private Integer isMyCar;
+
+    private Integer canDismiss;
+
+    private Integer canGetOn;
+
+    private Integer canGetOff;
 }

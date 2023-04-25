@@ -36,8 +36,15 @@ public class CarController extends BaseController {
     @GetMapping(value = "/list")
     public Response<List<CarSimpleVo>> queryList (WxContext ctx, QueryCar query) {
 
-        List<FtCarPo> carPos = carService.queryCar(query);
+        List<FtCarPo> carPos = carService.queryCar(getUser(ctx), query);
         return Response.success(carWebService.po2vo(getUser(ctx), carPos));
+    }
+
+    @GetMapping(value = "/list_in_schedule")
+    public Response<List<CarSimpleVo>> queryListInSchedule (WxContext ctx, QueryCar query) {
+
+        List<FtCarPo> carPos = carService.queryCar(getUser(ctx), query);
+        return Response.success(carWebService.listInSchedule(getUser(ctx), carPos));
     }
 
     @PostMapping(value = "/launch")
