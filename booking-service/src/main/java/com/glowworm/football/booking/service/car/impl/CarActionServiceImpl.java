@@ -60,7 +60,7 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
     public void getOff(UserBean user, Long carId) {
 
         FtPassengerPo passengerPo = FtPassengerPo.builder()
-                .passengerStatus(PassengerStatus.GET_ON)
+                .passengerStatus(PassengerStatus.GET_OFF)
                 .build();
 
         passengerMapper.update(passengerPo, Wrappers.lambdaQuery(FtPassengerPo.class)
