@@ -16,4 +16,6 @@ public interface ICarActionService {
     void getOn (UserBean user, GetOnFormVo getOnFormVo);
 
     void getOff (UserBean user, Long carId);
+
+    void dismiss (UserBean user, Long carId);
 }

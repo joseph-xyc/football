@@ -67,4 +67,11 @@ public class CarController extends BaseController {
         carActionService.getOff(getUser(ctx), carId);
         return Response.success(Strings.EMPTY);
     }
+
+    @PostMapping(value = "/dismiss/{carId}")
+    public Response<String> dismiss (WxContext ctx, @PathVariable(value = "carId") Long carId) {
+
+        carActionService.dismiss(getUser(ctx), carId);
+        return Response.success(Strings.EMPTY);
+    }
 }

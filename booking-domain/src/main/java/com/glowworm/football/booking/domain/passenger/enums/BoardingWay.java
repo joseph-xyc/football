@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author xuyongchang
@@ -29,6 +30,9 @@ public enum BoardingWay {
 
     public static BoardingWay getByCode (Integer code) {
 
+        if (Objects.isNull(code)) {
+            return BoardingWay.SELF;
+        }
         return Arrays.stream(values()).filter(item -> item.getCode().equals(code)).findFirst().orElse(null);
     }
 }

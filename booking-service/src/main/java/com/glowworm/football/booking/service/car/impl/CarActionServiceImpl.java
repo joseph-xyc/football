@@ -19,8 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author xuyongchang
@@ -38,6 +41,8 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void launch(UserBean user, LaunchCarFormVo launchCarFormVo) {
+
+        validLaunch(user, launchCarFormVo);
 
         saveLaunch(user, launchCarFormVo);
     }
@@ -63,6 +68,29 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
                 .eq(FtPassengerPo::getPassengerId, user.getId()));
     }
 
+    @Override
+    public void dismiss(UserBean user, Long carId) {
+
+        // 校验
+        FtCarPo car = carMapper.selectById(carId);
+        Utils.isTrue(Objects.nonNull(car), "不能存在的车");
+        Utils.isTrue(car.getUserId().equals(user.getId()), "您不是此车的司机");
+        Utils.throwError(car.getCarStatus().equals(CarStatus.ORDERED), "此车已成单, 无法解散");
+
+        // 更新车状态
+        carMapper.updateById(FtCarPo.builder()
+                .id(carId)
+                .carStatus(CarStatus.CANCEL)
+                .build());
+
+        // 所有人下车
+        FtPassengerPo passengerPo = FtPassengerPo.builder()
+                .passengerStatus(PassengerStatus.INVALID)
+                .build();
+        passengerMapper.update(passengerPo, Wrappers.lambdaQuery(FtPassengerPo.class)
+                .eq(FtPassengerPo::getCarId, carId));
+    }
+
     private void validGetOn (UserBean user, GetOnFormVo getOnFormVo) {
 
         Long carId = getOnFormVo.getCarId();
@@ -73,14 +101,6 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
         Utils.throwError(carPo.getCarStatus().equals(CarStatus.ORDERED), "此车已上路, 无法上车");
         Utils.throwError(carPo.getCarStatus().equals(CarStatus.CANCEL), "此车已取消, 无法上车");
         Utils.throwError(carPo.getCarStatus().equals(CarStatus.EXPIRE), "此车已过期, 无法上车");
-
-        // 乘客校验
-        boolean exists = passengerMapper.exists(Wrappers.lambdaQuery(FtPassengerPo.class)
-                .eq(FtPassengerPo::getPassengerId, user.getId())
-                .eq(FtPassengerPo::getPassengerStatus, PassengerStatus.GET_ON));
-
-        Utils.throwError(exists, "您已在其他车上, 无法重复上车");
-
     }
 
     private void savePassenger(UserBean user, GetOnFormVo getOnFormVo) {
@@ -95,7 +115,31 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
         saveOrUpdate(passengerPo);
     }
 
+    private void validLaunch (UserBean user, LaunchCarFormVo formVo) {
+
+        // 校验
+        List<FtPassengerPo> passengerPoList = passengerMapper.selectList(Wrappers.lambdaQuery(FtPassengerPo.class)
+                .eq(FtPassengerPo::getPassengerId, user.getId())
+                .eq(FtPassengerPo::getPassengerStatus, PassengerStatus.GET_ON));
+
+        if (CollectionUtils.isEmpty(passengerPoList)) {
+            return;
+        }
+
+        // 此乘客所有在车上的list
+        List<Long> carIds = passengerPoList.stream().map(FtPassengerPo::getCarId).collect(Collectors.toList());
+        List<FtCarPo> cars = carMapper.selectBatchIds(carIds);
+
+        boolean isPassenger = cars.stream()
+                .map(FtCarPo::getScheduleId)
+                .anyMatch(scheduleId -> scheduleId.equals(formVo.getScheduleId()));
+
+        Utils.throwError(isPassenger, "您已经在此球场上，上了其他车, 请先下车或解散");
+    }
+
     private void saveLaunch (UserBean user, LaunchCarFormVo formVo) {
+
+
 
         FtCarPo carPo = FtCarPo.builder()
                 .stadiumId(formVo.getStadiumId())
