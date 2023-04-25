@@ -17,6 +17,7 @@ public class ValidateException extends RuntimeException {
 
     public ValidateException(String message) {
         super(message);
+        this.message = message;
     }
 
     public ValidateException(String message, Throwable cause) {
