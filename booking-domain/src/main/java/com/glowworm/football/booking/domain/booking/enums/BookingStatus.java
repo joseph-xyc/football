@@ -13,19 +13,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum BookingStatus {
 
-    PLANNING(0, "组队中", "组队中"),
+    WAIT_STADIUM_CONFIRM(0, "待球场确认"),
 
-    WAIT_STADIUM_CONFIRM(1, "待球场确认", "组队完成，等待球场确认"),
+    BOOKED(10, "预订成功"),
 
-    BOOKED(10, "预订成功", "预订成功"),
+    PERSONAL_CANCEL(50, "个人取消"),
 
-    PERSONAL_CANCEL(50, "个人取消", "取消预约"),
+    STADIUM_CANCEL(51, "球场撤销"),
 
-    STADIUM_CANCEL(51, "球场撤销", "场地方取消"),
-
-    SYS_CANCEL(59, "系统撤销", "系统取消"),
-
-
+    SYS_CANCEL(59, "系统撤销"),
 
     ;
 
@@ -34,5 +30,4 @@ public enum BookingStatus {
 
     private final String desc;
 
-    private final String brief;
 }

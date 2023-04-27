@@ -10,5 +10,7 @@ import com.glowworm.football.booking.domain.user.UserBean;
  */
 public interface IBookingActionService {
 
-    void booking (UserBean user, BookingFormVo bookingVo);
+    Long booking (UserBean user, BookingFormVo bookingVo);
+
+    void cancel (UserBean user, Long id);
 }

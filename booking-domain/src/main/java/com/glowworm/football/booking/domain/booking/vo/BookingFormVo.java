@@ -1,5 +1,6 @@
 package com.glowworm.football.booking.domain.booking.vo;
 
+import com.glowworm.football.booking.domain.car.vo.LaunchCarFormVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,11 +23,11 @@ public class BookingFormVo {
     // 球队ID
     private Long teamId;
 
-    // 预期报名人数
-    private Integer expectSignUpNum;
+    // 车ID
+    private Long carId;
 
-    // 预期招募人数
-    private Integer expectRecruitNum;
+    // 车表单
+    private CarFormInBookingVo carFormVo;
 
     // 预约类型
     private Integer bookingType;

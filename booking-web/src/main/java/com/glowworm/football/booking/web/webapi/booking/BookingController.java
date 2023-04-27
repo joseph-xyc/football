@@ -7,10 +7,7 @@ import com.glowworm.football.booking.service.booking.IBookingActionService;
 import com.glowworm.football.booking.web.webapi.base.BaseController;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author xuyongchang
@@ -28,6 +25,13 @@ public class BookingController extends BaseController {
     public Response<String> booking (WxContext ctx, @RequestBody BookingFormVo formVo) {
 
         bookingActionService.booking(getUser(ctx), formVo);
+        return Response.success(Strings.EMPTY);
+    }
+
+    @PostMapping(value = "/cancel/{id}")
+    public Response<String> cancel (WxContext ctx, @PathVariable(value = "id") Long id) {
+
+        bookingActionService.cancel(getUser(ctx), id);
         return Response.success(Strings.EMPTY);
     }
 }

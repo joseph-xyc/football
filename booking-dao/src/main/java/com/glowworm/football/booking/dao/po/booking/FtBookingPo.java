@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.glowworm.football.booking.domain.booking.enums.BookingMatchingStatus;
 import com.glowworm.football.booking.domain.booking.enums.BookingStatus;
 import com.glowworm.football.booking.domain.booking.enums.BookingType;
 import lombok.Builder;
@@ -35,15 +34,11 @@ public class FtBookingPo {
 
     private Long teamId;
 
-    private Integer expectSignUpNum;
-
-    private Integer expectRecruitNum;
+    private Long carId;
 
     private BookingType bookingType;
 
     private BookingStatus bookingStatus;
-
-    private BookingMatchingStatus matchingStatus;
 
     @TableLogic
     private Integer isDeleted;

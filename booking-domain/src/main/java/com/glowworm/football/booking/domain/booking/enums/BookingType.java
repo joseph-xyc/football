@@ -1,6 +1,7 @@
 package com.glowworm.football.booking.domain.booking.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.glowworm.football.booking.domain.car.enums.CarType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,11 +16,9 @@ import java.util.Arrays;
 @AllArgsConstructor
 public enum BookingType {
 
-    WHOLE(0, "全场", "内训"),
+    WHOLE(0, "全场", CarType.TRUCK),
 
-    HALF(1, "半场", "约队PK"),
-
-    WHEEL(2, "车轮战", "3队及以上"),
+    HALF(1, "半场", CarType.CAR),
 
     ;
 
@@ -28,10 +27,13 @@ public enum BookingType {
 
     private final String desc;
 
-    private final String brief;
+    private final CarType carType;
 
     public static BookingType getByCode (Integer code) {
 
-        return Arrays.stream(values()).filter(item -> item.getCode().equals(code)).findFirst().orElse(null);
+        return Arrays.stream(values())
+                .filter(item -> item.getCode().equals(code))
+                .findFirst()
+                .orElse(WHOLE);
     }
 }

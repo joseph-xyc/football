@@ -17,7 +17,7 @@ public enum ScheduleStatus {
 
     ENABLE(1, "可用"),
 
-    PLANNING(9, "组队中"),
+    HALF_BOOKED(9, "半预订"),
 
     BOOKED(10, "已预订"),
 

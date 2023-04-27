@@ -11,11 +11,13 @@ import com.glowworm.football.booking.domain.user.UserBean;
  */
 public interface ICarActionService {
 
-    void launch (UserBean user, LaunchCarFormVo launchCarFormVo);
+    Long launch (UserBean user, LaunchCarFormVo launchCarFormVo);
 
     void getOn (UserBean user, GetOnFormVo getOnFormVo);
 
     void getOff (UserBean user, Long carId);
 
     void dismiss (UserBean user, Long carId);
+
+    boolean validLaunch (UserBean user, Long scheduleId);
 }

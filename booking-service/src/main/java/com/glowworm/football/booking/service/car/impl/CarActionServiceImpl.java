@@ -40,11 +40,11 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void launch(UserBean user, LaunchCarFormVo launchCarFormVo) {
+    public Long launch(UserBean user, LaunchCarFormVo launchCarFormVo) {
 
         validLaunch(user, launchCarFormVo);
 
-        saveLaunch(user, launchCarFormVo);
+        return saveLaunch(user, launchCarFormVo);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -91,6 +91,29 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
                 .eq(FtPassengerPo::getCarId, carId));
     }
 
+    @Override
+    public boolean validLaunch(UserBean user, Long scheduleId) {
+
+        // 校验
+        List<FtPassengerPo> passengerPoList = passengerMapper.selectList(Wrappers.lambdaQuery(FtPassengerPo.class)
+                .eq(FtPassengerPo::getPassengerId, user.getId())
+                .eq(FtPassengerPo::getPassengerStatus, PassengerStatus.GET_ON));
+
+        if (CollectionUtils.isEmpty(passengerPoList)) {
+            return true;
+        }
+
+        // 此乘客所有在车上的list
+        List<Long> carIds = passengerPoList.stream().map(FtPassengerPo::getCarId).collect(Collectors.toList());
+        List<FtCarPo> cars = carMapper.selectBatchIds(carIds);
+
+        boolean isPassenger = cars.stream()
+                .map(FtCarPo::getScheduleId)
+                .anyMatch(curScheduleId -> curScheduleId.equals(scheduleId));
+
+        return !isPassenger;
+    }
+
     private void validGetOn (UserBean user, GetOnFormVo getOnFormVo) {
 
         Long carId = getOnFormVo.getCarId();
@@ -119,29 +142,11 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
 
     private void validLaunch (UserBean user, LaunchCarFormVo formVo) {
 
-        // 校验
-        List<FtPassengerPo> passengerPoList = passengerMapper.selectList(Wrappers.lambdaQuery(FtPassengerPo.class)
-                .eq(FtPassengerPo::getPassengerId, user.getId())
-                .eq(FtPassengerPo::getPassengerStatus, PassengerStatus.GET_ON));
-
-        if (CollectionUtils.isEmpty(passengerPoList)) {
-            return;
-        }
-
-        // 此乘客所有在车上的list
-        List<Long> carIds = passengerPoList.stream().map(FtPassengerPo::getCarId).collect(Collectors.toList());
-        List<FtCarPo> cars = carMapper.selectBatchIds(carIds);
-
-        boolean isPassenger = cars.stream()
-                .map(FtCarPo::getScheduleId)
-                .anyMatch(scheduleId -> scheduleId.equals(formVo.getScheduleId()));
-
-        Utils.throwError(isPassenger, "您已经在此球场上，上了其他车, 请先下车或解散");
+        boolean canLaunch = validLaunch(user, formVo.getScheduleId());
+        Utils.isTrue(canLaunch, "您已经在此球场上，上了其他车, 请先下车或解散");
     }
 
-    private void saveLaunch (UserBean user, LaunchCarFormVo formVo) {
-
-
+    private Long saveLaunch (UserBean user, LaunchCarFormVo formVo) {
 
         FtCarPo carPo = FtCarPo.builder()
                 .stadiumId(formVo.getStadiumId())
@@ -167,5 +172,7 @@ public class CarActionServiceImpl extends ServiceImpl<FtPassengerMapper, FtPasse
                 .build();
 
         passengerMapper.insert(passengerPo);
+
+        return carPo.getId();
     }
 }
