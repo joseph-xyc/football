@@ -1,6 +1,5 @@
 package com.glowworm.football.booking.web.webapi.booking;
 
-import com.glowworm.football.booking.domain.booking.enums.BookingStatus;
 import com.glowworm.football.booking.domain.booking.query.QueryBooking;
 import com.glowworm.football.booking.domain.booking.vo.BookingFormVo;
 import com.glowworm.football.booking.domain.booking.vo.BookingVo;
@@ -30,12 +29,9 @@ public class BookingController extends BaseController {
     private IBookingService bookingService;
 
     @GetMapping("/list_in_schedule")
-    public Response<List<BookingVo>> booking (WxContext ctx, Long scheduleId) {
+    public Response<List<BookingVo>> booking (WxContext ctx, QueryBooking query) {
 
-        List<BookingVo> bookingList = bookingService.query(QueryBooking.builder()
-                .scheduleId(scheduleId)
-                .bookingStatus(BookingStatus.BOOKED)
-                .build());
+        List<BookingVo> bookingList = bookingService.query(query);
         return Response.success(bookingList);
     }
 

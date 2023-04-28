@@ -1,6 +1,7 @@
 package com.glowworm.football.booking.domain.booking.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.glowworm.football.booking.domain.car.enums.CarType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.util.Arrays;
  */
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BookingType {
 
     WHOLE(0, "全场", CarType.TRUCK),

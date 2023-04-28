@@ -1,6 +1,7 @@
 package com.glowworm.football.booking.domain.booking.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,6 +12,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BookingStatus {
 
     WAIT_STADIUM_CONFIRM(0, "待球场确认"),

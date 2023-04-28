@@ -1,5 +1,7 @@
 package com.glowworm.football.booking.domain.booking.vo;
 
+import com.glowworm.football.booking.domain.booking.enums.BookingStatus;
+import com.glowworm.football.booking.domain.booking.enums.BookingType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class BookingVo {
 
     private Long id;
@@ -30,7 +33,7 @@ public class BookingVo {
 
     private Long carId;
 
-    private Integer bookingType;
+    private BookingType bookingType;
 
-    private Integer bookingStatus;
+    private BookingStatus bookingStatus;
 }
