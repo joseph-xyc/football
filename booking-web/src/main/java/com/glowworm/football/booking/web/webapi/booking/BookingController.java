@@ -1,13 +1,19 @@
 package com.glowworm.football.booking.web.webapi.booking;
 
+import com.glowworm.football.booking.domain.booking.enums.BookingStatus;
+import com.glowworm.football.booking.domain.booking.query.QueryBooking;
 import com.glowworm.football.booking.domain.booking.vo.BookingFormVo;
+import com.glowworm.football.booking.domain.booking.vo.BookingVo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.service.booking.IBookingActionService;
+import com.glowworm.football.booking.service.booking.IBookingService;
 import com.glowworm.football.booking.web.webapi.base.BaseController;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author xuyongchang
@@ -20,12 +26,24 @@ public class BookingController extends BaseController {
 
     @Autowired
     private IBookingActionService bookingActionService;
+    @Autowired
+    private IBookingService bookingService;
+
+    @GetMapping("/list_in_schedule")
+    public Response<List<BookingVo>> booking (WxContext ctx, Long scheduleId) {
+
+        List<BookingVo> bookingList = bookingService.query(QueryBooking.builder()
+                .scheduleId(scheduleId)
+                .bookingStatus(BookingStatus.BOOKED)
+                .build());
+        return Response.success(bookingList);
+    }
 
     @PostMapping(value = "")
-    public Response<String> booking (WxContext ctx, @RequestBody BookingFormVo formVo) {
+    public Response<Long> booking (WxContext ctx, @RequestBody BookingFormVo formVo) {
 
-        bookingActionService.booking(getUser(ctx), formVo);
-        return Response.success(Strings.EMPTY);
+        Long id = bookingActionService.booking(getUser(ctx), formVo);
+        return Response.success(id);
     }
 
     @PostMapping(value = "/cancel/{id}")
