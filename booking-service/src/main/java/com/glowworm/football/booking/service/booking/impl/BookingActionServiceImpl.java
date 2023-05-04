@@ -16,6 +16,7 @@ import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.service.booking.IBookingActionService;
 import com.glowworm.football.booking.service.car.ICarActionService;
 import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
+import com.glowworm.football.booking.service.team.ITeamActionService;
 import com.glowworm.football.booking.service.util.Utils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,8 @@ public class BookingActionServiceImpl implements IBookingActionService {
     private IStadiumScheduleService scheduleService;
     @Autowired
     private ICarActionService carActionService;
+    @Autowired
+    private ITeamActionService teamActionService;
 
     @Transactional
     @Override
@@ -102,12 +105,27 @@ public class BookingActionServiceImpl implements IBookingActionService {
 
     private Long doBooking (UserBean user, StadiumScheduleBean schedule, BookingFormVo bookingVo) {
 
+        // 尝试生成随机的teamId
+        enhanceTeamId(bookingVo);
+
         // save车
         Long carId = saveCar(user, schedule, bookingVo);
         bookingVo.setCarId(carId);
 
         // save Booking
         return saveBooking(user, schedule, bookingVo);
+    }
+
+    private void enhanceTeamId (BookingFormVo bookingVo) {
+
+        // 如果已存在真实teamId, 则跳过
+        if (Utils.isPositive(bookingVo.getTeamId())) {
+            return;
+        }
+
+        // 随机生成teamId
+        Long randomTeamId = teamActionService.randomTeamId(bookingVo.getScheduleId());
+        bookingVo.setTeamId(randomTeamId);
     }
 
     private Long saveBooking (UserBean user, StadiumScheduleBean schedule, BookingFormVo bookingVo) {

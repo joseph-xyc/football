@@ -15,7 +15,9 @@ mybatis-plus:
 ---
 # 测试环境
 spring:
-  profiles: dev
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:mysql://10.221.47.78:3306/xyctest?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: rd
@@ -25,7 +27,9 @@ spring:
 ---
 # 调试模式
 spring:
-  profiles: debug
+  config:
+    activate:
+      on-profile: debug
   datasource:
     url: jdbc:mysql://sh-cynosdbmysql-grp-9cx0m3na.sql.tencentcdb.com:28064/football?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: football
@@ -35,7 +39,9 @@ spring:
 ---
 # 生产环境
 spring:
-  profiles: prod
+  config:
+    activate:
+      on-profile: prod
   datasource:
     url: jdbc:mysql://10.1.102.45:3306/football?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: football

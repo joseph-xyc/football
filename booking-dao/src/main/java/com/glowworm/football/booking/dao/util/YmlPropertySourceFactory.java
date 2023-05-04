@@ -26,7 +26,7 @@ public class YmlPropertySourceFactory implements PropertySourceFactory {
             factory.afterPropertiesSet();
             Properties properties = factory.getObject();
 
-            return new PropertiesPropertySource(name, properties);
+            return new PropertiesPropertySource(sourceName, properties);
         }
         return null;
     }
