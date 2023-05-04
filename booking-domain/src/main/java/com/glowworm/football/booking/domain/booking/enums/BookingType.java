@@ -18,9 +18,10 @@ import java.util.Arrays;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BookingType {
 
-    WHOLE(0, "全场", CarType.TRUCK),
-
     HALF(1, "半场", CarType.CAR),
+
+    WHOLE(2, "全场", CarType.TRUCK),
+
 
     ;
 
