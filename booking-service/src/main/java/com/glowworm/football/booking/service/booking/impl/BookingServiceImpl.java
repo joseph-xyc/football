@@ -31,6 +31,8 @@ public class BookingServiceImpl implements IBookingService {
     public List<BookingVo> query(QueryBooking query) {
 
         List<FtBookingPo> bookingPos = bookingMapper.selectList(Wrappers.lambdaQuery(FtBookingPo.class)
+                .eq(Objects.nonNull(query.getStadiumId()), FtBookingPo::getStadiumId, query.getStadiumId())
+                .eq(Objects.nonNull(query.getBlockId()), FtBookingPo::getBlockId, query.getBlockId())
                 .eq(Objects.nonNull(query.getScheduleId()), FtBookingPo::getScheduleId, query.getScheduleId())
                 .in(!CollectionUtils.isEmpty(query.getScheduleIds()), FtBookingPo::getScheduleId, query.getScheduleIds())
                 .eq(Objects.nonNull(query.getBookingStatus()), FtBookingPo::getBookingStatus, query.getBookingStatus()));

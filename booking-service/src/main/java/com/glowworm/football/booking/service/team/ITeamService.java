@@ -3,6 +3,7 @@ package com.glowworm.football.booking.service.team;
 import com.glowworm.football.booking.domain.team.vo.TeamSimpleVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xuyongchang
@@ -12,5 +13,7 @@ import java.util.List;
 public interface ITeamService {
 
     List<TeamSimpleVo> getRandomTeams ();
+
+    Map<Long, TeamSimpleVo> queryRandomTeam (List<Long> randomTeamIds);
 
 }

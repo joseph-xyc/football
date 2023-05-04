@@ -8,6 +8,7 @@ import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.service.booking.IBookingActionService;
 import com.glowworm.football.booking.service.booking.IBookingService;
 import com.glowworm.football.booking.web.webapi.base.BaseController;
+import com.glowworm.football.booking.web.webapi.booking.service.BookingWebService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +28,14 @@ public class BookingController extends BaseController {
     private IBookingActionService bookingActionService;
     @Autowired
     private IBookingService bookingService;
+    @Autowired
+    private BookingWebService bookingWebService;
 
     @GetMapping("/list_in_schedule")
     public Response<List<BookingVo>> booking (WxContext ctx, QueryBooking query) {
 
         List<BookingVo> bookingList = bookingService.query(query);
-        return Response.success(bookingList);
+        return Response.success(bookingWebService.enhanceTeamSimpleInfo(bookingList));
     }
 
     @PostMapping(value = "")

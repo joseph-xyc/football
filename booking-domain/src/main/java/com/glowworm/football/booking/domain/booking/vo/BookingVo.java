@@ -2,6 +2,7 @@ package com.glowworm.football.booking.domain.booking.vo;
 
 import com.glowworm.football.booking.domain.booking.enums.BookingStatus;
 import com.glowworm.football.booking.domain.booking.enums.BookingType;
+import com.glowworm.football.booking.domain.team.vo.TeamSimpleVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +31,8 @@ public class BookingVo {
     private Long userId;
 
     private Long teamId;
+
+    private TeamSimpleVo teamSimpleVo;
 
     private Long carId;
 
