@@ -34,4 +34,11 @@ public class UserBean {
     private Timestamp ctime;
 
     private Timestamp mtime;
+
+    public static UserBean SYS = UserBean.builder()
+            .id(-888L)
+            .openId("-888")
+            .username(UserType.SYS.getDesc())
+            .userType(UserType.SYS)
+            .build();
 }

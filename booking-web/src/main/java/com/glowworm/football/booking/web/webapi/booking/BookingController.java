@@ -35,7 +35,7 @@ public class BookingController extends BaseController {
     public Response<List<BookingVo>> booking (WxContext ctx, QueryBooking query) {
 
         List<BookingVo> bookingList = bookingService.query(query);
-        return Response.success(bookingWebService.enhanceTeamSimpleInfo(bookingList));
+        return Response.success(bookingWebService.enhanceTeamSimpleInfo(getUser(ctx), bookingList));
     }
 
     @PostMapping(value = "")

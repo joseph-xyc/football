@@ -3,6 +3,7 @@ package com.glowworm.football.booking.service.passenger;
 import com.glowworm.football.booking.dao.po.passenger.FtPassengerPo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xuyongchang
@@ -12,4 +13,8 @@ import java.util.List;
 public interface IPassengerService {
 
     List<FtPassengerPo> queryPassengerOnBoard (Long carId);
+
+    Map<Long, List<FtPassengerPo>> queryPassengerOnBoard (List<Long> carIds);
+
+
 }

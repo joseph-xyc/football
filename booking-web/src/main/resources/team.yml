@@ -8,7 +8,7 @@ team:
     - {id: -5, name: 公牛队, logo: /images/random_team/cattle.svg}
     - {id: -6, name: 狼队, logo: /images/random_team/dog.svg}
     - {id: -7, name: 野鸭队, logo: /images/random_team/duck.svg}
-    - {id: -8, name: 大象队, logo: /images/random_team/elephant.svg}
+    - {id: -8, name: 非洲象队, logo: /images/random_team/elephant.svg}
     - {id: -9, name: 野兔队, logo: /images/random_team/rabbit.svg}
     - {id: -10, name: 雄鹰队, logo: /images/random_team/eagle.svg}
     - {id: -11, name: 飞鸽队, logo: /images/random_team/pigeon.svg}
