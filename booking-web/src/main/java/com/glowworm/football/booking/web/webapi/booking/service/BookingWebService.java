@@ -8,7 +8,6 @@ import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.service.passenger.IPassengerService;
 import com.glowworm.football.booking.service.team.ITeamService;
 import com.glowworm.football.booking.service.util.Utils;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -37,4 +37,6 @@ public class ScheduleVo {
     private Integer isWeekend;
 
     private Integer status;
+
+    private Integer price;
 }

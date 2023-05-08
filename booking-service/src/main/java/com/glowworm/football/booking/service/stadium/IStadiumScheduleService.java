@@ -1,5 +1,6 @@
 package com.glowworm.football.booking.service.stadium;
 
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.stadium.StadiumScheduleBean;
 import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
 
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public interface IStadiumScheduleService {
 
-    List<StadiumScheduleBean> querySchedule (QuerySchedule query);
+    List<FtStadiumSchedulePo> querySchedule (QuerySchedule query);
 
     StadiumScheduleBean getSchedule (Long id);
 }

@@ -35,6 +35,8 @@ public class FtStadiumSchedulePo {
 
     private ScheduleStatus status;
 
+    private Integer price;
+
     @TableLogic
     private Integer isDeleted;
 

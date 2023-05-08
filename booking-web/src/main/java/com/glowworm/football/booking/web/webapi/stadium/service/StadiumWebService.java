@@ -2,6 +2,7 @@ package com.glowworm.football.booking.web.webapi.stadium.service;
 
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
@@ -66,13 +67,13 @@ public class StadiumWebService {
 
     public List<ScheduleVo> queryScheduleList (QuerySchedule query) {
 
-        List<StadiumScheduleBean> scheduleBeans = scheduleService.querySchedule(query);
+        List<FtStadiumSchedulePo> schedule = scheduleService.querySchedule(query);
 
-        if (CollectionUtils.isEmpty(scheduleBeans)) {
+        if (CollectionUtils.isEmpty(schedule)) {
             return Collections.emptyList();
         }
 
-        return scheduleBeans.stream().map(item -> ScheduleVo.builder()
+        return schedule.stream().map(item -> ScheduleVo.builder()
                 .id(item.getId())
                 .stadiumId(item.getStadiumId())
                 .blockId(item.getBlockId())
@@ -83,6 +84,7 @@ public class StadiumWebService {
                 .weekName(DateUtils.getWeekName(item.getDate()))
                 .isWeekend(DateUtils.isWeekend(item.getDate()))
                 .status(item.getStatus().getCode())
+                .price(item.getPrice())
                 .build())
                 .collect(Collectors.toList());
     }

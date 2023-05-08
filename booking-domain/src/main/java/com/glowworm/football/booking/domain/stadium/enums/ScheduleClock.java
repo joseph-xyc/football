@@ -1,6 +1,7 @@
 package com.glowworm.football.booking.domain.stadium.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
  */
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ScheduleClock {
 
     T_8(8, "08:00", TrueFalse.FALSE),

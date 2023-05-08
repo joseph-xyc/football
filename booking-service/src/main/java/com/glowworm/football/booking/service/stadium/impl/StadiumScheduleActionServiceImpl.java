@@ -2,16 +2,19 @@ package com.glowworm.football.booking.service.stadium.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtStadiumScheduleMapper;
+import com.glowworm.football.booking.dao.po.publish_price.FtPublishPricePo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
+import com.glowworm.football.booking.domain.publish_price.enums.Week;
+import com.glowworm.football.booking.domain.publish_price.query.QueryPublishPrice;
 import com.glowworm.football.booking.domain.stadium.StadiumBean;
 import com.glowworm.football.booking.domain.stadium.StadiumBlockBean;
 import com.glowworm.football.booking.domain.stadium.enums.ScheduleClock;
 import com.glowworm.football.booking.domain.stadium.enums.ScheduleStatus;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
+import com.glowworm.football.booking.service.publish_price.IPublishPriceService;
 import com.glowworm.football.booking.service.stadium.IStadiumScheduleActionService;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
 import com.glowworm.football.booking.service.util.DateUtils;
-import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +34,10 @@ public class StadiumScheduleActionServiceImpl implements IStadiumScheduleActionS
 
     @Autowired
     private FtStadiumScheduleMapper scheduleMapper;
-
     @Autowired
     private IStadiumService stadiumService;
+    @Autowired
+    private IPublishPriceService publishPriceService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -68,6 +72,14 @@ public class StadiumScheduleActionServiceImpl implements IStadiumScheduleActionS
                     for (int i = 0; i < ScheduleClock.values().length - 1; i++) {
                         ScheduleClock begin = ScheduleClock.values()[i];
                         ScheduleClock end = ScheduleClock.values()[i + 1];
+
+                        // 查询刊例价
+                        FtPublishPricePo publishPrice = publishPriceService.getPublishPrice(QueryPublishPrice.builder()
+                                .blockId(block.getId())
+                                .week(Week.getByCode(DateUtils.getWeekDay(date)))
+                                .clockBegin(begin)
+                                .build());
+
                         FtStadiumSchedulePo schedule = FtStadiumSchedulePo.builder()
                                 .stadiumId(block.getStadiumId())
                                 .blockId(block.getId())
@@ -75,6 +87,7 @@ public class StadiumScheduleActionServiceImpl implements IStadiumScheduleActionS
                                 .clockBegin(begin)
                                 .clockEnd(end)
                                 .status(ScheduleStatus.ENABLE)
+                                .price(publishPrice.getPrice())
                                 .build();
                         scheduleMapper.insert(schedule);
                     }

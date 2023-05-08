@@ -29,7 +29,7 @@ public class StadiumScheduleServiceImpl implements IStadiumScheduleService {
     private FtStadiumScheduleMapper scheduleMapper;
 
     @Override
-    public List<StadiumScheduleBean> querySchedule(QuerySchedule query) {
+    public List<FtStadiumSchedulePo> querySchedule(QuerySchedule query) {
 
         List<FtStadiumSchedulePo> schedulePos = scheduleMapper.selectList(Wrappers.lambdaQuery(FtStadiumSchedulePo.class)
                 .eq(Objects.nonNull(query.getStadiumId()), FtStadiumSchedulePo::getStadiumId, query.getStadiumId())
@@ -38,9 +38,7 @@ public class StadiumScheduleServiceImpl implements IStadiumScheduleService {
                 .le(Objects.nonNull(query.getDateEnd()), FtStadiumSchedulePo::getDate, MybatisUtils.notNull(query.getDateEnd(), DateUtils::getTimestamp))
                 .in(Utils.isPositive(query.getIsAfternoon()), FtStadiumSchedulePo::getClockBegin, ScheduleClock.getAfternoonClock()));
 
-        List<StadiumScheduleBean> result = Utils.copy(schedulePos, StadiumScheduleBean.class);
-
-        return result;
+        return schedulePos;
     }
 
     @Override

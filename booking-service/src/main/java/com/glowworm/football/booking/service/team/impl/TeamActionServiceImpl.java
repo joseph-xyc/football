@@ -1,5 +1,6 @@
 package com.glowworm.football.booking.service.team.impl;
 
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.booking.query.QueryBooking;
 import com.glowworm.football.booking.domain.booking.vo.BookingVo;
 import com.glowworm.football.booking.domain.stadium.StadiumScheduleBean;
@@ -47,14 +48,14 @@ public class TeamActionServiceImpl implements ITeamActionService {
 
         // 查block & date的这一批schedule
         StadiumScheduleBean schedule = scheduleService.getSchedule(scheduleId);
-        List<StadiumScheduleBean> scheduleInGroup = scheduleService.querySchedule(QuerySchedule.builder()
+        List<FtStadiumSchedulePo> scheduleInGroup = scheduleService.querySchedule(QuerySchedule.builder()
                 .blockId(schedule.getBlockId())
                 .dateBegin(DateUtils.getTimestamp2String(schedule.getDate()))
                 .dateEnd(DateUtils.getTimestamp2String(schedule.getDate()))
                 .build());
 
         List<Long> scheduleIds = scheduleInGroup.stream()
-                .map(StadiumScheduleBean::getId)
+                .map(FtStadiumSchedulePo::getId)
                 .collect(Collectors.toList());
 
         // 查这批schedule下的booking
