@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.glowworm.football.booking.domain.user.enums.Sex;
+import com.glowworm.football.booking.domain.user.enums.UserLevel;
 import com.glowworm.football.booking.domain.user.enums.UserType;
 import lombok.Builder;
 import lombok.Data;
@@ -22,19 +24,27 @@ public class FtUserPo {
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    private String username;
-
     private String openId;
 
-    private String sourceFrom;
+    private String username;
 
-    private Integer userStatus;
+    private String nickname;
 
     private UserType userType;
 
+    private UserLevel level;
+
     private String avatar;
 
-    private Integer sex;
+    private Sex sex;
+
+    private String position;
+
+    private String style;
+
+    private Integer likes;
+
+    private Integer userStatus;
 
     @TableLogic
     private Integer isDeleted;

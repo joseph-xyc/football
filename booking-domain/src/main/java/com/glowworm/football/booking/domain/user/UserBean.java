@@ -1,9 +1,9 @@
 package com.glowworm.football.booking.domain.user;
 
-import com.glowworm.football.booking.domain.user.enums.UserType;
+import com.glowworm.football.booking.domain.user.enums.*;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author xuyongchang
@@ -17,23 +17,27 @@ public class UserBean {
 
     private Long id;
 
-    private String username;
-
     private String openId;
 
-    private String sourceFrom;
+    private String username;
 
-    private Integer userStatus;
+    private String nickname;
 
     private UserType userType;
 
+    private UserLevel level;
+
     private String avatar;
 
-    private Integer sex;
+    private Sex sex;
 
-    private Timestamp ctime;
+    private List<Position> pos;
 
-    private Timestamp mtime;
+    private List<Style> styles;
+
+    private Integer likes;
+
+    private Integer userStatus;
 
     public static UserBean SYS = UserBean.builder()
             .id(-888L)

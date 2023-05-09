@@ -2,8 +2,8 @@ package com.glowworm.football.booking.service.user;
 
 import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.domain.common.context.WxContext;
+import com.glowworm.football.booking.domain.user.vo.CreateUserFormVo;
 
-import java.util.List;
 
 /**
  * @author xuyongchang
@@ -13,6 +13,8 @@ public interface IUserService {
 
     UserBean userInfo (String openId);
 
-    void registerUser (WxContext ctx, UserBean userBean);
+    void registerUser (WxContext ctx, CreateUserFormVo formVo);
+
+    void updateUser (WxContext ctx, CreateUserFormVo formVo);
 
 }
