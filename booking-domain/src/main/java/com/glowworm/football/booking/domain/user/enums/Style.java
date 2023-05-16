@@ -21,19 +21,15 @@ import java.util.stream.Collectors;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Style {
 
-    S_1(1, "瞎J8踢"),
+    S_1(1, "出汗养生"),
 
-    S_2(2, "推土机"),
+    S_2(2, "快乐足球"),
 
-    S_3(3, "技术流"),
+    S_3(3, "团队配合"),
 
-    S_4(4, "作风硬朗"),
+    S_4(4, "直接暴趟"),
 
-    S_5(5, "拼抢积极"),
-
-    S_6(6, "球王踢法"),
-
-    S_7(7, "散步养生"),
+    S_5(5, "技术细腻"),
 
     ;
 
