@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  */
 @Getter
 @AllArgsConstructor
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Position {
 
     GK(0, "门将"),

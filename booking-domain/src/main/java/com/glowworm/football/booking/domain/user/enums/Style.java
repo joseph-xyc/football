@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  */
 @Getter
 @AllArgsConstructor
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum Style {
 
     S_1(1, "出汗养生"),
