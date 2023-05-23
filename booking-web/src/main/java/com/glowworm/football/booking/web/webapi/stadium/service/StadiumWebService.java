@@ -15,6 +15,7 @@ import com.glowworm.football.booking.service.stadium.IStadiumCollectService;
 import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
 import com.glowworm.football.booking.service.util.DateUtils;
+import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,10 @@ public class StadiumWebService {
 
         // 收藏数据
         List<FtStadiumCollectPo> collectList = stadiumCollectService.queryStadiumCollect(user);
-        List<Long> stadiumIds = collectList.stream().map(FtStadiumCollectPo::getStadiumId).collect(Collectors.toList());
+        List<Long> stadiumIds = collectList.stream()
+                .filter(item -> Utils.isPositive(item.getCollectStatus().getCode()))
+                .map(FtStadiumCollectPo::getStadiumId)
+                .collect(Collectors.toList());
 
         return stadiumBeans.stream().map(item -> {
 
