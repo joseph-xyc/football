@@ -13,9 +13,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum SwardType {
 
-    ARTIFICIAL(0, "人工草"),
+    ARTIFICIAL(0, "人工"),
 
-    NATURAL(1, "天然草"),
+    NATURAL(1, "天然"),
 
     PLASTIC(3, "塑胶"),
 

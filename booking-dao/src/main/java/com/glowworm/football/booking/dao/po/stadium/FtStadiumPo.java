@@ -27,6 +27,8 @@ public class FtStadiumPo {
 
     private String address;
 
+    private String introduce;
+
     private Integer district;
 
     private String contactPerson;

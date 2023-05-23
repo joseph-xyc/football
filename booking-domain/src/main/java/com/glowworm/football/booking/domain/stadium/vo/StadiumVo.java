@@ -24,6 +24,8 @@ public class StadiumVo {
 
     private String address;
 
+    private String introduce;
+
     private Integer district;
 
     private Integer stadiumStatus;
@@ -39,4 +41,9 @@ public class StadiumVo {
      * 场地规格
      */
     private List<String> scaleTypeList;
+
+    /**
+     * 是否收藏
+     */
+    private Integer isCollect;
 }

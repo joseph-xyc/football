@@ -6,6 +6,7 @@ import com.glowworm.football.booking.domain.user.enums.Style;
 import com.glowworm.football.booking.domain.user.vo.CreateUserFormVo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.response.Response;
+import com.glowworm.football.booking.service.stadium.IStadiumCollectService;
 import com.glowworm.football.booking.service.user.IUserService;
 import com.glowworm.football.booking.service.user.IUserVisitLogService;
 import com.glowworm.football.booking.web.webapi.base.BaseController;
@@ -29,6 +30,8 @@ public class UserController extends BaseController {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IStadiumCollectService stadiumCollectService;
 
     @Autowired
     private IUserVisitLogService userVisitLogService;
@@ -65,6 +68,20 @@ public class UserController extends BaseController {
     public Response<List<Style>> styles (WxContext ctx) {
 
         return Response.success(Arrays.stream(Style.values()).collect(Collectors.toList()));
+    }
+
+    @PostMapping(value = "/collect/stadium/{id}")
+    public Response<String> collectStadium (WxContext ctx, @PathVariable(value = "id") Long id) {
+
+        stadiumCollectService.collectStadium(getUser(ctx), id);
+        return Response.success(Strings.EMPTY);
+    }
+
+    @PostMapping(value = "/unCollect/stadium/{id}")
+    public Response<String> unCollectStadium (WxContext ctx, @PathVariable(value = "id") Long id) {
+
+        stadiumCollectService.unCollectStadium(getUser(ctx), id);
+        return Response.success(Strings.EMPTY);
     }
 
     @GetMapping(value = "/visit_log")

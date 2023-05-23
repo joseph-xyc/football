@@ -29,7 +29,7 @@ public class StadiumController extends BaseController {
     @GetMapping(value = "/list")
     public Response<List<StadiumVo>> queryList (WxContext ctx, QueryStadium query) {
 
-        return Response.success(stadiumWebService.queryList(ctx, query));
+        return Response.success(stadiumWebService.queryList(getUser(ctx), query));
     }
 
     @GetMapping(value = "/info/{id}")

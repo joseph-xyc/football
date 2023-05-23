@@ -1,13 +1,17 @@
 package com.glowworm.football.booking.web.webapi.stadium.service;
 
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumCollectPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
+import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
 import com.glowworm.football.booking.domain.stadium.vo.*;
+import com.glowworm.football.booking.domain.user.UserBean;
+import com.glowworm.football.booking.service.stadium.IStadiumCollectService;
 import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
 import com.glowworm.football.booking.service.util.DateUtils;
@@ -32,11 +36,17 @@ public class StadiumWebService {
     private IStadiumService stadiumService;
     @Autowired
     private IStadiumScheduleService scheduleService;
+    @Autowired
+    private IStadiumCollectService stadiumCollectService;
 
-    public List<StadiumVo> queryList (WxContext ctx, QueryStadium query) {
+    public List<StadiumVo> queryList (UserBean user, QueryStadium query) {
 
 
         List<StadiumBean> stadiumBeans = stadiumService.queryList(query);
+
+        // 收藏数据
+        List<FtStadiumCollectPo> collectList = stadiumCollectService.queryStadiumCollect(user);
+        List<Long> stadiumIds = collectList.stream().map(FtStadiumCollectPo::getStadiumId).collect(Collectors.toList());
 
         return stadiumBeans.stream().map(item -> {
 
@@ -47,15 +57,20 @@ public class StadiumWebService {
             List<String> swardTypeList = blockList.stream().map(block -> block.getSwardType().getDesc()).distinct().collect(Collectors.toList());
             List<String> scaleTypeList = blockList.stream().map(block -> block.getScaleType().getAbbr()).distinct().collect(Collectors.toList());
 
+            // 是否收藏
+            Integer isCollect = TrueFalse.getByBoolean(stadiumIds.contains(item.getId())).getCode();
+
             return StadiumVo.builder()
                     .id(item.getId())
                     .stadiumName(item.getStadiumName())
                     .address(item.getAddress())
+                    .introduce(item.getIntroduce())
                     .district(item.getDistrict())
                     .stadiumStatus(item.getStadiumStatus().getCode())
                     .mainImageUrl(item.getMainImageUrl())
                     .swardTypeList(swardTypeList)
                     .scaleTypeList(scaleTypeList)
+                    .isCollect(isCollect)
                     .build();
         }).collect(Collectors.toList());
     }

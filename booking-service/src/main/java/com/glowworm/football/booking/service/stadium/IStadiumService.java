@@ -2,6 +2,7 @@ package com.glowworm.football.booking.service.stadium;
 
 
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumCollectPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
 import com.glowworm.football.booking.domain.stadium.StadiumBean;
