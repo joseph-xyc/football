@@ -26,6 +26,7 @@ public class StadiumController extends BaseController {
 
     @Autowired
     private StadiumWebService stadiumWebService;
+
     @GetMapping(value = "/list")
     public Response<List<StadiumVo>> queryList (WxContext ctx, QueryStadium query) {
 

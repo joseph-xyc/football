@@ -1,9 +1,6 @@
 package com.glowworm.football.booking.web.webapi.stadium.service;
 
-import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
-import com.glowworm.football.booking.dao.po.stadium.FtStadiumCollectPo;
-import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
-import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
+import com.glowworm.football.booking.dao.po.stadium.*;
 import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import com.glowworm.football.booking.domain.stadium.*;
@@ -14,6 +11,7 @@ import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.service.stadium.IStadiumCollectService;
 import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
+import com.glowworm.football.booking.service.stadium.IStadiumTagService;
 import com.glowworm.football.booking.service.util.DateUtils;
 import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -39,18 +38,27 @@ public class StadiumWebService {
     private IStadiumScheduleService scheduleService;
     @Autowired
     private IStadiumCollectService stadiumCollectService;
+    @Autowired
+    private IStadiumTagService stadiumTagService;
 
     public List<StadiumVo> queryList (UserBean user, QueryStadium query) {
 
-
         List<StadiumBean> stadiumBeans = stadiumService.queryList(query);
+        if (CollectionUtils.isEmpty(stadiumBeans)) {
+            return Collections.emptyList();
+        }
+        List<Long> stadiumIds = stadiumBeans.stream().map(StadiumBean::getId).collect(Collectors.toList());
 
         // 收藏数据
         List<FtStadiumCollectPo> collectList = stadiumCollectService.queryStadiumCollect(user);
-        List<Long> stadiumIds = collectList.stream()
+        List<Long> collectStadiumIds = collectList.stream()
                 .filter(item -> Utils.isPositive(item.getCollectStatus().getCode()))
                 .map(FtStadiumCollectPo::getStadiumId)
                 .collect(Collectors.toList());
+
+        // 球场tag数据
+        Map<Long, List<FtStadiumTagPo>> tagMap = stadiumTagService.queryTagMap(stadiumIds);
+
 
         return stadiumBeans.stream().map(item -> {
 
@@ -62,7 +70,11 @@ public class StadiumWebService {
             List<String> scaleTypeList = blockList.stream().map(block -> block.getScaleType().getAbbr()).distinct().collect(Collectors.toList());
 
             // 是否收藏
-            Integer isCollect = TrueFalse.getByBoolean(stadiumIds.contains(item.getId())).getCode();
+            Integer isCollect = TrueFalse.getByBoolean(collectStadiumIds.contains(item.getId())).getCode();
+
+            // 球场标签
+            List<FtStadiumTagPo> tags = tagMap.getOrDefault(item.getId(), Collections.emptyList());
+            List<String> tagStringList = tags.stream().map(FtStadiumTagPo::getTag).collect(Collectors.toList());
 
             return StadiumVo.builder()
                     .id(item.getId())
@@ -75,6 +87,7 @@ public class StadiumWebService {
                     .swardTypeList(swardTypeList)
                     .scaleTypeList(scaleTypeList)
                     .isCollect(isCollect)
+                    .tags(tagStringList)
                     .build();
         }).collect(Collectors.toList());
     }

@@ -46,4 +46,9 @@ public class StadiumVo {
      * 是否收藏
      */
     private Integer isCollect;
+
+    /**
+     * 标签
+     */
+    private List<String> tags;
 }
