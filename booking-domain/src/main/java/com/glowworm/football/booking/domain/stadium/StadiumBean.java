@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -28,6 +29,10 @@ public class StadiumBean {
     private String introduce;
 
     private Integer district;
+
+    private BigDecimal lat;
+
+    private BigDecimal lon;
 
     private String contactPerson;
 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -51,4 +52,14 @@ public class StadiumVo {
      * 标签
      */
     private List<String> tags;
+
+    /**
+     * 维度
+     */
+    private BigDecimal lat;
+
+    /**
+     * 经度
+     */
+    private BigDecimal lon;
 }

@@ -88,6 +88,8 @@ public class StadiumWebService {
                     .scaleTypeList(scaleTypeList)
                     .isCollect(isCollect)
                     .tags(tagStringList)
+                    .lat(item.getLat())
+                    .lon(item.getLon())
                     .build();
         }).collect(Collectors.toList());
     }

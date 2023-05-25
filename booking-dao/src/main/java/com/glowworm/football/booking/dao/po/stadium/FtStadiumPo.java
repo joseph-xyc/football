@@ -8,6 +8,7 @@ import com.glowworm.football.booking.domain.stadium.enums.StadiumStatus;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
@@ -30,6 +31,10 @@ public class FtStadiumPo {
     private String introduce;
 
     private Integer district;
+
+    private BigDecimal lat;
+
+    private BigDecimal lon;
 
     private String contactPerson;
 
