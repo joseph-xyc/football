@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author xuyongchang
@@ -40,5 +41,10 @@ public enum Week {
     public static Week getByCode (Integer code) {
 
         return Arrays.stream(values()).filter(item -> item.getCode().equals(code)).findFirst().orElse(null);
+    }
+
+    public static List<Week> getWeekend () {
+
+        return Arrays.asList(SATURDAY, SUNDAY);
     }
 }

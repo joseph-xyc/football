@@ -46,4 +46,14 @@ public class StadiumBean {
      * 球场内的场地list
      */
     private List<StadiumBlockBean> blockList;
+
+    /**
+     * 周末的均价
+     */
+    private BigDecimal averagePrice;
+
+    /**
+     * 用户相距的距离
+     */
+    private BigDecimal distance;
 }

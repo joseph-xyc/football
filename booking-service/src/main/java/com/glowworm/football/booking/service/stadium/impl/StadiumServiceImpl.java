@@ -1,5 +1,6 @@
 package com.glowworm.football.booking.service.stadium.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtStadiumBlockMapper;
 import com.glowworm.football.booking.dao.mapper.FtStadiumImageMapper;
@@ -7,13 +8,15 @@ import com.glowworm.football.booking.dao.mapper.FtStadiumMapper;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumImagePo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
+import com.glowworm.football.booking.domain.common.enums.TrueFalse;
+import com.glowworm.football.booking.domain.publish_price.enums.Week;
+import com.glowworm.football.booking.domain.publish_price.query.QueryPublishPrice;
 import com.glowworm.football.booking.domain.stadium.*;
-import com.glowworm.football.booking.domain.stadium.enums.StadiumBlockStatus;
-import com.glowworm.football.booking.domain.stadium.enums.StadiumImageType;
-import com.glowworm.football.booking.domain.stadium.enums.StadiumStatus;
+import com.glowworm.football.booking.domain.stadium.enums.*;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
 import com.glowworm.football.booking.domain.stadium.vo.StadiumBlockVo;
 import com.glowworm.football.booking.domain.stadium.vo.StadiumInfoVo;
+import com.glowworm.football.booking.service.publish_price.IPublishPriceService;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
 import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -46,13 +47,14 @@ public class StadiumServiceImpl implements IStadiumService {
     @Autowired
     private FtStadiumImageMapper ftStadiumImageMapper;
 
+    @Autowired
+    private IPublishPriceService priceService;
+
     @Override
     public List<StadiumBean> queryList(QueryStadium query) {
 
-        List<FtStadiumPo> stadiumList = stadiumMapper.selectList(Wrappers.lambdaQuery(FtStadiumPo.class)
-                .eq(Objects.nonNull(query.getId()), FtStadiumPo::getId, query.getId())
-                .eq(FtStadiumPo::getStadiumStatus, StadiumStatus.ENABLE.getCode())
-                .like(Objects.nonNull(query.getStadiumName()), FtStadiumPo::getStadiumName, query.getStadiumName()));
+        LambdaQueryWrapper<FtStadiumPo> queryWrapper = buildQueryWrapper(query);
+        List<FtStadiumPo> stadiumList = stadiumMapper.selectList(queryWrapper);
 
         if (CollectionUtils.isEmpty(stadiumList)) {
             return Collections.emptyList();
@@ -93,7 +95,123 @@ public class StadiumServiceImpl implements IStadiumService {
             return stadiumBean;
         }).collect(Collectors.toList());
 
-        return result;
+        // 排序
+        return doSort(result, query);
+    }
+
+    private LambdaQueryWrapper<FtStadiumPo> buildQueryWrapper (QueryStadium query) {
+
+        LambdaQueryWrapper<FtStadiumPo> queryWrapper = Wrappers.lambdaQuery(FtStadiumPo.class)
+                .eq(Objects.nonNull(query.getId()), FtStadiumPo::getId, query.getId())
+                .eq(FtStadiumPo::getStadiumStatus, StadiumStatus.ENABLE.getCode())
+                .in(!CollectionUtils.isEmpty(query.getDistrict()), FtStadiumPo::getDistrict, query.getDistrict())
+                .like(Objects.nonNull(query.getStadiumName()), FtStadiumPo::getStadiumName, query.getStadiumName());
+
+        // 处理scale筛选条件
+        if (!Utils.isPositive(enhanceScaleType(query, queryWrapper))) {
+            return queryWrapper;
+        }
+
+        return queryWrapper;
+    }
+
+    private List<StadiumBean> doSort (List<StadiumBean> stadiumList, QueryStadium query) {
+
+        if (CollectionUtils.isEmpty(stadiumList) || Objects.isNull(query.getSort())) {
+            return stadiumList;
+        }
+
+        StadiumSort sort = StadiumSort.get(query.getSort());
+        if (Objects.isNull(sort)) {
+            return stadiumList;
+        }
+
+        switch (sort) {
+            // 距离排序
+            case DISTANCE_FIRST:
+                return doDistanceSort(stadiumList, query);
+            // 按价格排序, 以周末(6,7)均价为准
+            case LOW_PRICE_FIRST:
+            case HIGH_PRICE_FIRST:
+                return doPriceSort(stadiumList, sort);
+            default:
+                return stadiumList;
+        }
+    }
+
+    private List<StadiumBean> doDistanceSort(List<StadiumBean> stadiumList, QueryStadium query) {
+
+        if (Objects.isNull(query.getUserLat()) || Objects.isNull(query.getUserLon())) {
+            return stadiumList;
+        }
+
+        // 计算距离并赋值
+        stadiumList.forEach(stadium -> {
+            double distance = Utils.getDistance(query.getUserLon(), query.getUserLat(), stadium.getLon().doubleValue(), stadium.getLat().doubleValue());
+            stadium.setDistance(BigDecimal.valueOf(distance));
+        });
+
+        // 按距离升序
+        return stadiumList.stream()
+                .sorted(Comparator.comparing(StadiumBean::getDistance))
+                .collect(Collectors.toList());
+    }
+
+    private List<StadiumBean> doPriceSort (List<StadiumBean> stadiumList, StadiumSort sort) {
+
+        List<Long> stadiumIds = stadiumList.stream().map(StadiumBean::getId).collect(Collectors.toList());
+
+        // 查询这些球场的周末均价
+        Map<Long, BigDecimal> averagePriceMap = priceService.getAveragePrice(QueryPublishPrice.builder()
+                .stadiumIds(stadiumIds)
+                .weeks(Week.getWeekend())
+                .build());
+
+        // 赋值均价
+        stadiumList.forEach(stadium -> {
+            BigDecimal averagePrice = averagePriceMap.getOrDefault(stadium.getId(), BigDecimal.ZERO);
+            stadium.setAveragePrice(averagePrice);
+        });
+
+        // 价格升序
+        if (sort.equals(StadiumSort.LOW_PRICE_FIRST)) {
+            return stadiumList.stream()
+                    .sorted(Comparator.comparing(StadiumBean::getAveragePrice))
+                    .collect(Collectors.toList());
+        }
+
+        // 价格降序
+        if (sort.equals(StadiumSort.HIGH_PRICE_FIRST)) {
+            return stadiumList.stream()
+                    .sorted(Comparator.comparing(StadiumBean::getAveragePrice).reversed())
+                    .collect(Collectors.toList());
+        }
+
+        return stadiumList;
+    }
+
+    private Integer enhanceScaleType (QueryStadium query, LambdaQueryWrapper<FtStadiumPo> queryWrapper) {
+
+        // 处理场地规格筛选条件
+        if (CollectionUtils.isEmpty(query.getScale())) {
+            return TrueFalse.TRUE.getCode();
+        }
+
+        List<ScaleType> scaleTypes = ScaleType.get(query.getScale());
+        List<FtStadiumBlockPo> blockList = blockMapper.selectList(Wrappers.lambdaQuery(FtStadiumBlockPo.class)
+                .in(!CollectionUtils.isEmpty(scaleTypes), FtStadiumBlockPo::getScaleType, scaleTypes)
+                .eq(FtStadiumBlockPo::getBlockStatus, StadiumBlockStatus.ENABLE.getCode()));
+
+        // 无数据时,强制使sql失效
+        if (CollectionUtils.isEmpty(blockList)) {
+            Utils.disableQuery(queryWrapper);
+            return TrueFalse.FALSE.getCode();
+        }
+
+        List<Long> stadiumIds = blockList.stream().map(FtStadiumBlockPo::getStadiumId).distinct().collect(Collectors.toList());
+        queryWrapper.in(FtStadiumPo::getId, stadiumIds);
+
+        return TrueFalse.TRUE.getCode();
     }
 
     @Override

@@ -10,6 +10,14 @@ import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author xuyongchang
@@ -23,17 +31,51 @@ public class PublishPriceServiceImpl implements IPublishPriceService {
     private FtPublishPriceMapper publishPriceMapper;
 
     @Override
-    public FtPublishPricePo getPublishPrice(QueryPublishPrice query) {
+    public List<FtPublishPricePo> queryPublishPrice(QueryPublishPrice query) {
 
         LambdaQueryWrapper<FtPublishPricePo> wrapper = Wrappers.lambdaQuery(FtPublishPricePo.class)
-                .eq(FtPublishPricePo::getBlockId, query.getBlockId())
-                .eq(FtPublishPricePo::getWeek, query.getWeek())
-                .eq(FtPublishPricePo::getClockBegin, query.getClockBegin());
+                .in(!CollectionUtils.isEmpty(query.getStadiumIds()), FtPublishPricePo::getStadiumId, query.getStadiumIds())
+                .eq(Objects.nonNull(query.getBlockId()), FtPublishPricePo::getBlockId, query.getBlockId())
+                .eq(Objects.nonNull(query.getWeek()), FtPublishPricePo::getWeek, query.getWeek())
+                .in(!CollectionUtils.isEmpty(query.getWeeks()), FtPublishPricePo::getWeek, query.getWeeks())
+                .eq(Objects.nonNull(query.getClockBegin()), FtPublishPricePo::getClockBegin, query.getClockBegin());
 
-        boolean exists = publishPriceMapper.exists(wrapper);
+        return publishPriceMapper.selectList(wrapper);
+    }
 
-        Utils.isTrue(exists, "请先维护好此球场的刊例价表信息");
+    @Override
+    public FtPublishPricePo getPublishPrice(QueryPublishPrice query) {
 
-        return publishPriceMapper.selectOne(wrapper);
+        List<FtPublishPricePo> priceList = queryPublishPrice(query);
+
+        Utils.isTrue(!CollectionUtils.isEmpty(priceList), "请先维护好此球场的刊例价表信息");
+
+        return priceList.get(0);
+    }
+
+    @Override
+    public Map<Long, BigDecimal> getAveragePrice(QueryPublishPrice query) {
+
+        // 查价格
+        List<FtPublishPricePo> priceList = queryPublishPrice(query);
+        if (CollectionUtils.isEmpty(priceList)) {
+            return Collections.emptyMap();
+        }
+
+        // 转map
+        Map<Long, List<FtPublishPricePo>> priceMap = priceList.stream()
+                .collect(Collectors.groupingBy(FtPublishPricePo::getStadiumId));
+        // 取平均数
+        return priceMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> {
+            List<Integer> allPrice = entry.getValue().stream()
+                    .map(FtPublishPricePo::getPrice)
+                    .collect(Collectors.toList());
+            // 加和
+            Integer sum = allPrice.stream().reduce(0, Integer::sum);
+            // 总数
+            int size = allPrice.size();
+            // 平均数
+            return Utils.divide(BigDecimal.valueOf(sum), BigDecimal.valueOf(size));
+        }));
     }
 }

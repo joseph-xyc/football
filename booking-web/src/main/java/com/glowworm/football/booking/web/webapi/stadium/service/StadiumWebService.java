@@ -90,6 +90,8 @@ public class StadiumWebService {
                     .tags(tagStringList)
                     .lat(item.getLat())
                     .lon(item.getLon())
+                    .averagePrice(item.getAveragePrice())
+                    .distance(item.getDistance())
                     .build();
         }).collect(Collectors.toList());
     }

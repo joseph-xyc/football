@@ -3,6 +3,13 @@ package com.glowworm.football.booking.domain.stadium.enums;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author xuyongchang
@@ -30,4 +37,27 @@ public enum ScaleType {
     private final String desc;
 
     private final String abbr;
+
+    public static ScaleType get (Integer code) {
+
+        if (Objects.isNull(code)) {
+            return null;
+        }
+
+        return Arrays.stream(values())
+                .filter(item -> item.getCode().equals(code))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static List<ScaleType> get (List<Integer> codes) {
+
+        if (CollectionUtils.isEmpty(codes)) {
+            return Collections.emptyList();
+        }
+
+        return Arrays.stream(values())
+                .filter(item -> codes.contains(item.getCode()))
+                .collect(Collectors.toList());
+    }
 }

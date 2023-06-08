@@ -62,4 +62,14 @@ public class StadiumVo {
      * 经度
      */
     private BigDecimal lon;
+
+    /**
+     * 周末的均价
+     */
+    private BigDecimal averagePrice;
+
+    /**
+     * 用户相距的距离
+     */
+    private BigDecimal distance;
 }
