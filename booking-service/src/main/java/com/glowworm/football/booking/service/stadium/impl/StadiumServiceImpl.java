@@ -95,6 +95,9 @@ public class StadiumServiceImpl implements IStadiumService {
             return stadiumBean;
         }).collect(Collectors.toList());
 
+        // 填充距离
+        enhanceDistance(result, query);
+
         // 排序
         return doSort(result, query);
     }
@@ -145,16 +148,23 @@ public class StadiumServiceImpl implements IStadiumService {
             return stadiumList;
         }
 
+        // 按距离升序
+        return stadiumList.stream()
+                .sorted(Comparator.comparing(StadiumBean::getDistance))
+                .collect(Collectors.toList());
+    }
+
+    private void enhanceDistance (List<StadiumBean> stadiumList, QueryStadium query) {
+
+        if (Objects.isNull(query.getUserLat()) || Objects.isNull(query.getUserLon())) {
+            return;
+        }
+
         // 计算距离并赋值
         stadiumList.forEach(stadium -> {
             double distance = Utils.getDistance(query.getUserLon(), query.getUserLat(), stadium.getLon().doubleValue(), stadium.getLat().doubleValue());
             stadium.setDistance(BigDecimal.valueOf(distance));
         });
-
-        // 按距离升序
-        return stadiumList.stream()
-                .sorted(Comparator.comparing(StadiumBean::getDistance))
-                .collect(Collectors.toList());
     }
 
     private List<StadiumBean> doPriceSort (List<StadiumBean> stadiumList, StadiumSort sort) {
