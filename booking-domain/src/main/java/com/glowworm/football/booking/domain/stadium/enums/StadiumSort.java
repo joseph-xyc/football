@@ -1,6 +1,7 @@
 package com.glowworm.football.booking.domain.stadium.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,6 +15,7 @@ import java.util.Objects;
  */
 @Getter
 @AllArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum StadiumSort {
 
     DISTANCE_FIRST(0, "距离优先"),

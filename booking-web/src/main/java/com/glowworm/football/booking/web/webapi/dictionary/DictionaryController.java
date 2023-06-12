@@ -35,7 +35,7 @@ public class DictionaryController extends BaseController {
         return Response.success(Arrays.stream(ScaleType.values()).collect(Collectors.toList()));
     }
 
-    @GetMapping(value = "/stadiumSort")
+    @GetMapping(value = "/stadium_sort")
     public Response<List<StadiumSort>> stadiumSort (WxContext ctx) {
 
         return Response.success(Arrays.stream(StadiumSort.values()).collect(Collectors.toList()));
