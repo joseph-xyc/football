@@ -47,4 +47,9 @@ public enum Week {
 
         return Arrays.asList(SATURDAY, SUNDAY);
     }
+
+    public static Boolean isWeekendForSchedule (Integer code) {
+
+        return Arrays.asList(FRIDAY, SATURDAY, SUNDAY).contains(getByCode(code));
+    }
 }

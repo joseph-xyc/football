@@ -147,4 +147,34 @@ public class DateUtils {
 
         return weekName;
     }
+
+    public static Timestamp getBeginDayOfWeek(Timestamp timestamp) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp.getTime());
+        int d = 0;
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            d = -6;
+        } else {
+            d = 2 - cal.get(Calendar.DAY_OF_WEEK);
+        }
+        cal.add(Calendar.DAY_OF_WEEK, d);
+
+        return new Timestamp(cal.getTimeInMillis());
+    }
+
+    public static Timestamp getEndDayOfWeek(Timestamp timestamp) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp.getTime());
+        int d = 0;
+        if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            d = -6;
+        } else {
+            d = 2 - cal.get(Calendar.DAY_OF_WEEK);
+        }
+        cal.add(Calendar.DAY_OF_WEEK, d);
+
+        cal.add(Calendar.DAY_OF_WEEK, 6);
+
+        return new Timestamp(cal.getTimeInMillis());
+    }
 }
