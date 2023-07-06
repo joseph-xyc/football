@@ -30,11 +30,10 @@ public class CommonController extends BaseController {
         Timestamp now = DateUtils.getNow();
 
         // 起止时间
-        Timestamp beginDay = DateUtils.getBeginDayOfWeek(now);
         Timestamp endDay = DateUtils.getEndDayOfWeek(DateUtils.getSomeDayAfter(now, 7));
 
         // 2周范围
-        List<Timestamp> days = DateUtils.getEachDays(beginDay, endDay);
+        List<Timestamp> days = DateUtils.getEachDays(now, endDay);
 
         List<WeekForSchedule> weekList = days.stream().map(item -> {
 
