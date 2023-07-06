@@ -31,11 +31,15 @@ public class DateUtils {
     }
 
     public static String getTimestamp2String(Timestamp timestamp) {
+        getTimestamp2String(timestamp, "yyyy-MM-dd");
+    }
+
+    public static String getTimestamp2String(Timestamp timestamp, String format) {
         if (timestamp == null) {
             return null;
         }
 
-        SimpleDateFormat sim = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sim = new SimpleDateFormat(format);
         return sim.format(timestamp);
     }
 
