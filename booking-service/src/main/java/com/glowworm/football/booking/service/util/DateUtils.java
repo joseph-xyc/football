@@ -31,7 +31,7 @@ public class DateUtils {
     }
 
     public static String getTimestamp2String(Timestamp timestamp) {
-        getTimestamp2String(timestamp, "yyyy-MM-dd");
+        return getTimestamp2String(timestamp, "yyyy-MM-dd");
     }
 
     public static String getTimestamp2String(Timestamp timestamp, String format) {
