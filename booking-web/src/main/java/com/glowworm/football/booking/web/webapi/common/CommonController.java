@@ -41,6 +41,7 @@ public class CommonController extends BaseController {
             Integer isWeekEnd = TrueFalse.getByBoolean(Week.isWeekendForSchedule(week.getCode())).getCode();
 
             return WeekForSchedule.builder()
+                    .date(item.getTime())
                     .dateStr(DateUtils.getTimestamp2String(item, "MM-dd"))
                     .week(week)
                     .isWeekEnd(isWeekEnd)

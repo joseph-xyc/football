@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WeekForSchedule {
 
+    private Long date;
+
     private String dateStr;
 
     private Week week;

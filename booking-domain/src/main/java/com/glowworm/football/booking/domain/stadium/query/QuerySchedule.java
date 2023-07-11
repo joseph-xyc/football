@@ -22,6 +22,8 @@ public class QuerySchedule {
 
     private Long blockId;
 
+    private Long date;
+
     private String dateBegin;
 
     private String dateEnd;
