@@ -29,7 +29,7 @@ public class ScheduleController extends BaseController {
     @GetMapping(value = "/list")
     public Response<List<ScheduleVo>> queryList (WxContext ctx, QuerySchedule query) {
 
-        return Response.success(stadiumWebService.queryScheduleList(query));
+        return Response.success(stadiumWebService.queryScheduleList(getUser(ctx), query));
     }
 
     @GetMapping(value = "/combine_info")

@@ -1,11 +1,15 @@
 package com.glowworm.football.booking.domain.stadium.vo;
 
+import com.glowworm.football.booking.domain.stadium.enums.ScaleType;
+import com.glowworm.football.booking.domain.stadium.enums.ScheduleStatus;
+import com.glowworm.football.booking.domain.team.vo.TeamSimpleVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author xuyongchang
@@ -24,6 +28,10 @@ public class ScheduleVo {
 
     private Long blockId;
 
+    private String blockName;
+
+    private ScaleType scaleType;
+
     private Timestamp date;
 
     private String clockBegin;
@@ -36,7 +44,14 @@ public class ScheduleVo {
 
     private Integer isWeekend;
 
-    private Integer status;
+    private ScheduleStatus status;
 
     private Integer price;
+
+    private List<TeamSimpleVo> teams;
+
+    private Integer matchingCount;
+
+    private Integer hasMatching;
+
 }

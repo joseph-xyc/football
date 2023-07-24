@@ -24,4 +24,6 @@ public interface IStadiumService {
 
     FtStadiumBlockPo getBlock (Long id);
 
+    List<FtStadiumBlockPo> queryBlock (List<Long> ids);
+
 }

@@ -269,4 +269,10 @@ public class StadiumServiceImpl implements IStadiumService {
     public FtStadiumBlockPo getBlock(Long id) {
         return blockMapper.selectById(id);
     }
+
+    @Override
+    public List<FtStadiumBlockPo> queryBlock(List<Long> ids) {
+
+        return blockMapper.selectBatchIds(ids);
+    }
 }
