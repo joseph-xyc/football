@@ -54,4 +54,6 @@ public class ScheduleVo {
 
     private Integer hasMatching;
 
+    private Integer isWholeBooking;
+
 }

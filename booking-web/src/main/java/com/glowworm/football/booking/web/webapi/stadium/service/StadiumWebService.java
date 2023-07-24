@@ -2,6 +2,7 @@ package com.glowworm.football.booking.web.webapi.stadium.service;
 
 import com.glowworm.football.booking.dao.po.matching.FtMatchingPo;
 import com.glowworm.football.booking.dao.po.stadium.*;
+import com.glowworm.football.booking.domain.booking.enums.BookingType;
 import com.glowworm.football.booking.domain.booking.query.QueryBooking;
 import com.glowworm.football.booking.domain.booking.vo.BookingVo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
@@ -194,6 +195,11 @@ public class StadiumWebService {
                     .map(tid -> teamMap.getOrDefault(tid, TeamSimpleVo.builder().build()))
                     .collect(Collectors.toList());
             item.setTeams(teams);
+
+            // bookingType信息
+            boolean isWhole = bookingList.stream().map(BookingVo::getBookingType).anyMatch(BookingType.WHOLE::equals);
+            item.setIsWholeBooking(TrueFalse.getByBoolean(isWhole).getCode());
+
         });
 
         return result;
