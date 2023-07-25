@@ -6,9 +6,11 @@ import com.glowworm.football.booking.dao.mapper.FtMatchingMapper;
 import com.glowworm.football.booking.dao.po.matching.FtMatchingPo;
 import com.glowworm.football.booking.domain.matching.enums.MatchingStatus;
 import com.glowworm.football.booking.domain.matching.vo.MatchingFormVo;
+import com.glowworm.football.booking.domain.stadium.StadiumScheduleBean;
 import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.domain.user.enums.UserType;
 import com.glowworm.football.booking.service.matching.IMatchingActionService;
+import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
 import com.glowworm.football.booking.service.util.DateUtils;
 import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,8 @@ public class MatchingActionServiceImpl implements IMatchingActionService {
 
     @Autowired
     private FtMatchingMapper matchingMapper;
+    @Autowired
+    private IStadiumScheduleService scheduleService;
 
     @Override
     @Transactional
@@ -43,8 +47,13 @@ public class MatchingActionServiceImpl implements IMatchingActionService {
 
         // 保存匹配信息
         if (CollectionUtils.isEmpty(matchingList)) {
+
+            StadiumScheduleBean schedule = scheduleService.getSchedule(formVo.getScheduleId());
+
             matchingMapper.insert(FtMatchingPo.builder()
                     .matchingStatus(MatchingStatus.MATCHING)
+                    .stadiumId(schedule.getStadiumId())
+                    .blockId(schedule.getBlockId())
                     .userId(user.getId())
                     .scheduleId(formVo.getScheduleId())
                     .build());
