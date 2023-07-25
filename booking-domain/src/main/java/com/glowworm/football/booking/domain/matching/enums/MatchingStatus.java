@@ -16,6 +16,8 @@ public enum MatchingStatus {
 
     MATCHED(1, "已匹配"),
 
+    CANCEL(9, "取消匹配"),
+
     END(10, "已结束"),
 
     ;
