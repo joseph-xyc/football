@@ -34,15 +34,20 @@ public class TeamServiceImpl implements ITeamService {
     @Override
     public Map<Long, TeamSimpleVo> queryRandomTeam(List<Long> randomTeamIds) {
 
+        List<TeamSimpleVo> result = queryRandomTeamList(randomTeamIds);
+        return result.stream().collect(Collectors.toMap(TeamSimpleVo::getId, Function.identity()));
+    }
+
+    @Override
+    public List<TeamSimpleVo> queryRandomTeamList(List<Long> randomTeamIds) {
+
         if (CollectionUtils.isEmpty(randomTeamIds)) {
-            return Collections.emptyMap();
+            return Collections.emptyList();
         }
 
         List<TeamSimpleVo> randomTeams = teamConfig.getRandomTeam();
-        List<TeamSimpleVo> result = randomTeams.stream()
+        return randomTeams.stream()
                 .filter(item -> randomTeamIds.contains(item.getId()))
                 .collect(Collectors.toList());
-
-        return result.stream().collect(Collectors.toMap(TeamSimpleVo::getId, Function.identity()));
     }
 }

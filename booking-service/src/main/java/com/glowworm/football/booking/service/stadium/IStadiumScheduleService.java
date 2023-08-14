@@ -15,5 +15,6 @@ public interface IStadiumScheduleService {
 
     List<FtStadiumSchedulePo> querySchedule (QuerySchedule query);
 
-    StadiumScheduleBean getSchedule (Long id);
+    FtStadiumSchedulePo getSchedule (Long id);
+
 }

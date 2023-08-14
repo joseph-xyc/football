@@ -49,7 +49,7 @@ public class BookingActionServiceImpl implements IBookingActionService {
     @Override
     public Long booking(UserBean user, BookingFormVo bookingVo) {
 
-        StadiumScheduleBean schedule = scheduleService.getSchedule(bookingVo.getScheduleId());
+        FtStadiumSchedulePo schedule = scheduleService.getSchedule(bookingVo.getScheduleId());
 
         validSchedule(schedule, bookingVo);
 
@@ -103,7 +103,7 @@ public class BookingActionServiceImpl implements IBookingActionService {
         scheduleMapper.updateById(schedulePo);
     }
 
-    private Long doBooking (UserBean user, StadiumScheduleBean schedule, BookingFormVo bookingVo) {
+    private Long doBooking (UserBean user, FtStadiumSchedulePo schedule, BookingFormVo bookingVo) {
 
         // 尝试生成随机的teamId
         enhanceTeamId(bookingVo);
@@ -128,7 +128,7 @@ public class BookingActionServiceImpl implements IBookingActionService {
         bookingVo.setTeamId(randomTeamId);
     }
 
-    private Long saveBooking (UserBean user, StadiumScheduleBean schedule, BookingFormVo bookingVo) {
+    private Long saveBooking (UserBean user, FtStadiumSchedulePo schedule, BookingFormVo bookingVo) {
 
         FtBookingPo bookingPo = FtBookingPo.builder()
                 .stadiumId(schedule.getStadiumId())
@@ -170,7 +170,7 @@ public class BookingActionServiceImpl implements IBookingActionService {
         scheduleMapper.updateById(schedulePo);
     }
 
-    private Long saveCar (UserBean user, StadiumScheduleBean schedule, BookingFormVo bookingVo) {
+    private Long saveCar (UserBean user, FtStadiumSchedulePo schedule, BookingFormVo bookingVo) {
 
         // 有ID, 直接用ID
         if (Utils.isPositive(bookingVo.getCarId())) {
@@ -198,7 +198,7 @@ public class BookingActionServiceImpl implements IBookingActionService {
         return 0L;
     }
 
-    private void validSchedule (StadiumScheduleBean schedule, BookingFormVo bookingVo) {
+    private void validSchedule (FtStadiumSchedulePo schedule, BookingFormVo bookingVo) {
 
         Utils.isTrue(Objects.nonNull(schedule), "不存在的时刻");
         Utils.throwError(schedule.getStatus().equals(ScheduleStatus.BOOKED), "当前时刻已被预订啦~ 下次请早");

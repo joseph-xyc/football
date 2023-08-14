@@ -2,6 +2,7 @@ package com.glowworm.football.booking.service.matching;
 
 import com.glowworm.football.booking.dao.po.matching.FtMatchingPo;
 import com.glowworm.football.booking.domain.matching.query.QueryMatching;
+import com.glowworm.football.booking.domain.matching.vo.MatchingVo;
 
 import java.util.List;
 import java.util.Map;
@@ -13,4 +14,6 @@ import java.util.Map;
 public interface IMatchingService {
 
     Map<Long, List<FtMatchingPo>> queryMatching (QueryMatching query);
+
+    List<MatchingVo> queryMatchingVo (Long scheduleId);
 }

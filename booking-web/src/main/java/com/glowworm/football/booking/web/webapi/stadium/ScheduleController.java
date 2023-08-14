@@ -9,6 +9,7 @@ import com.glowworm.football.booking.web.webapi.base.BaseController;
 import com.glowworm.football.booking.web.webapi.stadium.service.StadiumWebService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +31,12 @@ public class ScheduleController extends BaseController {
     public Response<List<ScheduleVo>> queryList (WxContext ctx, QuerySchedule query) {
 
         return Response.success(stadiumWebService.queryScheduleList(getUser(ctx), query));
+    }
+
+    @GetMapping(value = "/detail/{scheduleId}")
+    public Response<ScheduleVo> detail (WxContext ctx, @PathVariable(value = "scheduleId") Long scheduleId) {
+
+        return Response.success(stadiumWebService.getScheduleDetail(getUser(ctx), scheduleId));
     }
 
     @GetMapping(value = "/combine_info")

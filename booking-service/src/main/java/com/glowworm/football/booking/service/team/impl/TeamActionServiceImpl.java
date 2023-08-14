@@ -47,7 +47,7 @@ public class TeamActionServiceImpl implements ITeamActionService {
          */
 
         // 查block & date的这一批schedule
-        StadiumScheduleBean schedule = scheduleService.getSchedule(scheduleId);
+        FtStadiumSchedulePo schedule = scheduleService.getSchedule(scheduleId);
         List<FtStadiumSchedulePo> scheduleInGroup = scheduleService.querySchedule(QuerySchedule.builder()
                 .blockId(schedule.getBlockId())
                 .dateBegin(DateUtils.getTimestamp2String(schedule.getDate()))

@@ -17,8 +17,14 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author xuyongchang
@@ -32,6 +38,27 @@ public class UserServiceImpl implements IUserService {
     private FtUserMapper userMapper;
     @Autowired
     private UserConfig userConfig;
+
+    @Override
+    public List<FtUserPo> queryUser(List<Long> ids) {
+
+        if (CollectionUtils.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+
+        return userMapper.selectList(Wrappers.lambdaQuery(FtUserPo.class).in(FtUserPo::getId, ids));
+    }
+
+    @Override
+    public Map<Long, FtUserPo> queryUserMap(List<Long> ids) {
+
+        List<FtUserPo> users = queryUser(ids);
+        if (CollectionUtils.isEmpty(users)) {
+            return Collections.emptyMap();
+        }
+
+        return users.stream().collect(Collectors.toMap(FtUserPo::getId, Function.identity()));
+    }
 
     @Override
     public UserBean userInfo(String openId) {

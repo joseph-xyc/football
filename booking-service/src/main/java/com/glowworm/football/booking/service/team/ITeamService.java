@@ -16,4 +16,6 @@ public interface ITeamService {
 
     Map<Long, TeamSimpleVo> queryRandomTeam (List<Long> randomTeamIds);
 
+    List<TeamSimpleVo> queryRandomTeamList (List<Long> randomTeamIds);
+
 }

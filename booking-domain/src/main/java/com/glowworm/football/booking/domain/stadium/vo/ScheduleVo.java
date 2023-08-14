@@ -1,5 +1,6 @@
 package com.glowworm.football.booking.domain.stadium.vo;
 
+import com.glowworm.football.booking.domain.matching.vo.MatchingVo;
 import com.glowworm.football.booking.domain.stadium.enums.ScaleType;
 import com.glowworm.football.booking.domain.stadium.enums.ScheduleStatus;
 import com.glowworm.football.booking.domain.team.vo.TeamSimpleVo;
@@ -49,6 +50,8 @@ public class ScheduleVo {
     private Integer price;
 
     private List<TeamSimpleVo> teams;
+
+    private List<MatchingVo> matching;
 
     private Integer matchingCount;
 

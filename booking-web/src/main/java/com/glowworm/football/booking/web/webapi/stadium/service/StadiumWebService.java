@@ -9,6 +9,7 @@ import com.glowworm.football.booking.domain.common.context.WxContext;
 import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import com.glowworm.football.booking.domain.matching.enums.MatchingStatus;
 import com.glowworm.football.booking.domain.matching.query.QueryMatching;
+import com.glowworm.football.booking.domain.matching.vo.MatchingVo;
 import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
@@ -29,10 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -130,6 +128,55 @@ public class StadiumWebService {
         return enhanceSchedule(user, schedule);
     }
 
+    public ScheduleVo getScheduleDetail (UserBean user, Long scheduleId) {
+
+        FtStadiumSchedulePo schedule = scheduleService.getSchedule(scheduleId);
+        if (Objects.isNull(schedule)) {
+            return ScheduleVo.builder().build();
+        }
+
+        return enhanceSchedule(user, schedule);
+    }
+
+    private ScheduleVo enhanceSchedule (UserBean user, FtStadiumSchedulePo schedule) {
+
+        // block信息
+        FtStadiumBlockPo block = stadiumService.getBlock(schedule.getBlockId());
+
+        // booking
+        List<BookingVo> bookings = bookingService.query(QueryBooking.builder().scheduleId(schedule.getId()).build());
+        boolean isWhole = bookings.stream().map(BookingVo::getBookingType).anyMatch(BookingType.WHOLE::equals);
+
+        // team
+        List<Long> teamIds = bookings.stream().map(BookingVo::getTeamId).collect(Collectors.toList());
+        List<TeamSimpleVo> teams = teamService.queryRandomTeamList(teamIds);
+
+        // matching
+        List<MatchingVo> matching = matchingService.queryMatchingVo(schedule.getId());
+        boolean hasMatching = matching.stream().map(MatchingVo::getUserId).anyMatch(user.getId()::equals);
+
+        return ScheduleVo.builder()
+                .id(schedule.getId())
+                .stadiumId(schedule.getStadiumId())
+                .blockId(schedule.getBlockId())
+                .blockName(block.getBlockName())
+                .scaleType(block.getScaleType())
+                .date(schedule.getDate())
+                .clockBegin(schedule.getClockBegin().getDesc())
+                .clockEnd(schedule.getClockEnd().getDesc())
+                .isAfternoon(schedule.getClockBegin().getIsAfternoon().getCode())
+                .weekName(DateUtils.getWeekName(schedule.getDate()))
+                .isWeekend(DateUtils.isWeekend(schedule.getDate()))
+                .status(schedule.getStatus())
+                .price(schedule.getPrice())
+                .teams(teams)
+                .matching(matching)
+                .matchingCount(matching.size())
+                .hasMatching(TrueFalse.getByBoolean(hasMatching).getCode())
+                .isWholeBooking(TrueFalse.getByBoolean(isWhole).getCode())
+                .build();
+    }
+
     private List<ScheduleVo> enhanceSchedule (UserBean user, List<FtStadiumSchedulePo> schedule) {
 
         // 查询block信息
@@ -209,7 +256,7 @@ public class StadiumWebService {
 
         FtStadiumPo stadium = stadiumService.getStadium(query.getStadiumId());
         FtStadiumBlockPo block = stadiumService.getBlock(query.getBlockId());
-        StadiumScheduleBean schedule = scheduleService.getSchedule(query.getId());
+        FtStadiumSchedulePo schedule = scheduleService.getSchedule(query.getId());
 
         return CombineScheduleVo.builder()
                 .stadium(StadiumVo.builder()

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtMatchingMapper;
 import com.glowworm.football.booking.dao.po.matching.FtMatchingPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.matching.enums.MatchingStatus;
 import com.glowworm.football.booking.domain.matching.vo.MatchingFormVo;
 import com.glowworm.football.booking.domain.stadium.StadiumScheduleBean;
@@ -48,7 +49,7 @@ public class MatchingActionServiceImpl implements IMatchingActionService {
         // 保存匹配信息
         if (CollectionUtils.isEmpty(matchingList)) {
 
-            StadiumScheduleBean schedule = scheduleService.getSchedule(formVo.getScheduleId());
+            FtStadiumSchedulePo schedule = scheduleService.getSchedule(formVo.getScheduleId());
 
             matchingMapper.insert(FtMatchingPo.builder()
                     .matchingStatus(MatchingStatus.MATCHING)
