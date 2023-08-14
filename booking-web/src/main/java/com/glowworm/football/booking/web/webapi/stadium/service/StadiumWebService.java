@@ -152,8 +152,16 @@ public class StadiumWebService {
         List<TeamSimpleVo> teams = teamService.queryRandomTeamList(teamIds);
 
         // matching
-        List<MatchingVo> matching = matchingService.queryMatchingVo(schedule.getId());
+        List<MatchingVo> matching = matchingService.queryMatchingVo(QueryMatching.builder()
+                .scheduleId(schedule.getId())
+                .matchingStatus(MatchingStatus.MATCHING)
+                .build());
         boolean hasMatching = matching.stream().map(MatchingVo::getUserId).anyMatch(user.getId()::equals);
+
+        List<MatchingVo> matched = matchingService.queryMatchingVo(QueryMatching.builder()
+                .scheduleId(schedule.getId())
+                .matchingStatus(MatchingStatus.MATCHED)
+                .build());
 
         return ScheduleVo.builder()
                 .id(schedule.getId())
@@ -171,6 +179,7 @@ public class StadiumWebService {
                 .price(schedule.getPrice())
                 .teams(teams)
                 .matching(matching)
+                .matched(matched)
                 .matchingCount(matching.size())
                 .hasMatching(TrueFalse.getByBoolean(hasMatching).getCode())
                 .isWholeBooking(TrueFalse.getByBoolean(isWhole).getCode())

@@ -37,22 +37,31 @@ public class MatchingServiceImpl implements IMatchingService {
     @Override
     public Map<Long, List<FtMatchingPo>> queryMatching(QueryMatching query) {
 
-        List<FtMatchingPo> result = matchingMapper.selectList(Wrappers.lambdaQuery(FtMatchingPo.class)
-                .eq(Objects.nonNull(query.getScheduleId()), FtMatchingPo::getScheduleId, query.getScheduleId())
-                .in(Objects.nonNull(query.getScheduleIds()), FtMatchingPo::getScheduleId, query.getScheduleIds())
-                .eq(Objects.nonNull(query.getMatchingStatus()), FtMatchingPo::getMatchingStatus, query.getMatchingStatus()));
+        List<FtMatchingPo> result = queryMatchingList(query);
+
+        if (CollectionUtils.isEmpty(result)) {
+            return Collections.emptyMap();
+        }
+
         return result.stream().collect(Collectors.groupingBy(FtMatchingPo::getScheduleId));
     }
 
-    @Override
-    public List<MatchingVo> queryMatchingVo(Long scheduleId) {
+    private List<FtMatchingPo> queryMatchingList (QueryMatching query) {
 
-        if (Objects.isNull(scheduleId)) {
+        return matchingMapper.selectList(Wrappers.lambdaQuery(FtMatchingPo.class)
+                .eq(Objects.nonNull(query.getScheduleId()), FtMatchingPo::getScheduleId, query.getScheduleId())
+                .in(Objects.nonNull(query.getScheduleIds()), FtMatchingPo::getScheduleId, query.getScheduleIds())
+                .eq(Objects.nonNull(query.getMatchingStatus()), FtMatchingPo::getMatchingStatus, query.getMatchingStatus()));
+    }
+
+    @Override
+    public List<MatchingVo> queryMatchingVo(QueryMatching query) {
+
+        if (Objects.isNull(query)) {
             return Collections.emptyList();
         }
 
-        List<FtMatchingPo> matchingPo = matchingMapper.selectList(Wrappers.lambdaQuery(FtMatchingPo.class)
-                .eq(FtMatchingPo::getScheduleId, scheduleId));
+        List<FtMatchingPo> matchingPo = queryMatchingList(query);
 
         if (CollectionUtils.isEmpty(matchingPo)) {
             return Collections.emptyList();

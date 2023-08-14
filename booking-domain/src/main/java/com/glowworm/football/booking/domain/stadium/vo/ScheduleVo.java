@@ -51,6 +51,8 @@ public class ScheduleVo {
 
     private List<TeamSimpleVo> teams;
 
+    private List<MatchingVo> matched;
+
     private List<MatchingVo> matching;
 
     private Integer matchingCount;
