@@ -151,7 +151,7 @@ public class StadiumWebService {
         // team
         List<Long> teamIds = bookings.stream().map(BookingVo::getTeamId).collect(Collectors.toList());
         List<TeamSimpleVo> teams = teamService.queryRandomTeamList(teamIds);
-        tryFillDefaultTeams(teams);
+        teams = tryFillDefaultTeams(teams);
 
         // matching
         List<MatchingVo> matching = matchingService.queryMatchingVo(QueryMatching.builder()
@@ -188,17 +188,20 @@ public class StadiumWebService {
                 .build();
     }
 
-    private void tryFillDefaultTeams (List<TeamSimpleVo> teams) {
+    private List<TeamSimpleVo> tryFillDefaultTeams (List<TeamSimpleVo> teams) {
 
         TeamSimpleVo defaultTeam = teamService.getDefaultTeam();
 
         if (CollectionUtils.isEmpty(teams)) {
-            teams = Lists.newArrayList(defaultTeam, defaultTeam);
+            return Lists.newArrayList(defaultTeam, defaultTeam);
         }
 
         if (teams.size() == 1) {
             teams.add(defaultTeam);
+            return teams;
         }
+
+        return teams;
     }
 
     private List<ScheduleVo> enhanceSchedule (UserBean user, List<FtStadiumSchedulePo> schedule) {
