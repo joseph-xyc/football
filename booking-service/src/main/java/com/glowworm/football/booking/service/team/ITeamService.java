@@ -18,4 +18,6 @@ public interface ITeamService {
 
     List<TeamSimpleVo> queryRandomTeamList (List<Long> randomTeamIds);
 
+    TeamSimpleVo getDefaultTeam ();
+
 }

@@ -25,6 +25,7 @@ import com.glowworm.football.booking.service.stadium.IStadiumTagService;
 import com.glowworm.football.booking.service.team.ITeamService;
 import com.glowworm.football.booking.service.util.DateUtils;
 import com.glowworm.football.booking.service.util.Utils;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -150,6 +151,7 @@ public class StadiumWebService {
         // team
         List<Long> teamIds = bookings.stream().map(BookingVo::getTeamId).collect(Collectors.toList());
         List<TeamSimpleVo> teams = teamService.queryRandomTeamList(teamIds);
+        tryFillDefaultTeams(teams);
 
         // matching
         List<MatchingVo> matching = matchingService.queryMatchingVo(QueryMatching.builder()
@@ -184,6 +186,19 @@ public class StadiumWebService {
                 .hasMatching(TrueFalse.getByBoolean(hasMatching).getCode())
                 .isWholeBooking(TrueFalse.getByBoolean(isWhole).getCode())
                 .build();
+    }
+
+    private void tryFillDefaultTeams (List<TeamSimpleVo> teams) {
+
+        TeamSimpleVo defaultTeam = teamService.getDefaultTeam();
+
+        if (CollectionUtils.isEmpty(teams)) {
+            teams = Lists.newArrayList(defaultTeam, defaultTeam);
+        }
+
+        if (teams.size() == 1) {
+            teams.add(defaultTeam);
+        }
     }
 
     private List<ScheduleVo> enhanceSchedule (UserBean user, List<FtStadiumSchedulePo> schedule) {

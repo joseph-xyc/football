@@ -50,4 +50,9 @@ public class TeamServiceImpl implements ITeamService {
                 .filter(item -> randomTeamIds.contains(item.getId()))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public TeamSimpleVo getDefaultTeam() {
+        return teamConfig.getDefaultTeam();
+    }
 }

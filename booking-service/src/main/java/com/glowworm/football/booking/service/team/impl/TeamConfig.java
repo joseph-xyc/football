@@ -17,4 +17,6 @@ import java.util.List;
 public class TeamConfig {
 
     private List<TeamSimpleVo> randomTeam;
+
+    private TeamSimpleVo defaultTeam;
 }

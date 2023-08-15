@@ -16,4 +16,8 @@ team:
     - {id: -13, name: 熊猫队, logo: /images/random_team/panda.svg}
     - {id: -14, name: 牛蛙队, logo: /images/random_team/frog.svg}
     - {id: -15, name: 猫头鹰队, logo: /images/random_team/owl.svg}
+  default-team:
+    id: 0
+    name: 空缺
+    logo: /images/common/import_info.png
 
