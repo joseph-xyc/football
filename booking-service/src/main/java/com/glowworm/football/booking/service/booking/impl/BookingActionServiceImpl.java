@@ -108,10 +108,6 @@ public class BookingActionServiceImpl implements IBookingActionService {
         // 尝试生成随机的teamId
         enhanceTeamId(bookingVo);
 
-        // save车
-        Long carId = saveCar(user, schedule, bookingVo);
-        bookingVo.setCarId(carId);
-
         // save Booking
         return saveBooking(user, schedule, bookingVo);
     }
@@ -136,8 +132,7 @@ public class BookingActionServiceImpl implements IBookingActionService {
                 .scheduleId(schedule.getId())
                 .userId(user.getId())
                 .teamId(bookingVo.getTeamId())
-                .carId(bookingVo.getCarId())
-                .bookingType(BookingType.getByCode(bookingVo.getBookingType()))
+                .bookingType(bookingVo.getBookingType())
                 .bookingStatus(BookingStatus.BOOKED)
                 .build();
         bookingMapper.insert(bookingPo);
@@ -170,33 +165,33 @@ public class BookingActionServiceImpl implements IBookingActionService {
         scheduleMapper.updateById(schedulePo);
     }
 
-    private Long saveCar (UserBean user, FtStadiumSchedulePo schedule, BookingFormVo bookingVo) {
-
-        // 有ID, 直接用ID
-        if (Utils.isPositive(bookingVo.getCarId())) {
-            return bookingVo.getCarId();
-        }
-
-        // 有表单信息, 直接根据表单创建
-        if (Objects.nonNull(bookingVo.getCarFormVo())) {
-
-            CarFormInBookingVo carFormVo = bookingVo.getCarFormVo();
-
-            return carActionService.launch(user, LaunchCarFormVo.builder()
-                    .stadiumId(schedule.getStadiumId())
-                    .blockId(schedule.getBlockId())
-                    .scheduleId(schedule.getId())
-                    .teamId(bookingVo.getTeamId())
-                    .carName(carFormVo.getCarName())
-                    .carTopic(carFormVo.getCarTopic())
-                    .recruitNum(carFormVo.getRecruitNum())
-                    .carType(BookingType.getByCode(bookingVo.getBookingType()).getCarType().getCode())
-                    .build());
-        }
-
-        // 啥都没有, 返回0
-        return 0L;
-    }
+//    private Long saveCar (UserBean user, FtStadiumSchedulePo schedule, BookingFormVo bookingVo) {
+//
+//        // 有ID, 直接用ID
+//        if (Utils.isPositive(bookingVo.getCarId())) {
+//            return bookingVo.getCarId();
+//        }
+//
+//        // 有表单信息, 直接根据表单创建
+//        if (Objects.nonNull(bookingVo.getCarFormVo())) {
+//
+//            CarFormInBookingVo carFormVo = bookingVo.getCarFormVo();
+//
+//            return carActionService.launch(user, LaunchCarFormVo.builder()
+//                    .stadiumId(schedule.getStadiumId())
+//                    .blockId(schedule.getBlockId())
+//                    .scheduleId(schedule.getId())
+//                    .teamId(bookingVo.getTeamId())
+//                    .carName(carFormVo.getCarName())
+//                    .carTopic(carFormVo.getCarTopic())
+//                    .recruitNum(carFormVo.getRecruitNum())
+//                    .carType(BookingType.getByCode(bookingVo.getBookingType()).getCarType().getCode())
+//                    .build());
+//        }
+//
+//        // 啥都没有, 返回0
+//        return 0L;
+//    }
 
     private void validSchedule (FtStadiumSchedulePo schedule, BookingFormVo bookingVo) {
 
@@ -205,7 +200,7 @@ public class BookingActionServiceImpl implements IBookingActionService {
         Utils.throwError(schedule.getStatus().equals(ScheduleStatus.DISABLE), "当前时刻不可用, 无法预订");
         // schedule处在半预订态，但表单是全场预订
         Utils.throwError(schedule.getStatus().equals(ScheduleStatus.HALF_BOOKED)
-                && bookingVo.getBookingType().equals(BookingType.WHOLE.getCode()), "当前时刻已被包了半场啦~ 无法全预定啦");
+                && bookingVo.getBookingType().equals(BookingType.WHOLE), "当前时刻已被包了半场啦~ 无法全预定啦");
 
     }
 }

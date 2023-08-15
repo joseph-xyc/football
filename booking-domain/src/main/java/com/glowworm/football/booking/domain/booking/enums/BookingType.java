@@ -2,7 +2,6 @@ package com.glowworm.football.booking.domain.booking.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.glowworm.football.booking.domain.car.enums.CarType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,9 +17,9 @@ import java.util.Arrays;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BookingType {
 
-    HALF(1, "半场", CarType.CAR),
+    HALF(1, "半场"),
 
-    WHOLE(2, "全场", CarType.TRUCK),
+    WHOLE(2, "全场"),
 
 
     ;
@@ -29,8 +28,6 @@ public enum BookingType {
     private final Integer code;
 
     private final String desc;
-
-    private final CarType carType;
 
     public static BookingType getByCode (Integer code) {
 

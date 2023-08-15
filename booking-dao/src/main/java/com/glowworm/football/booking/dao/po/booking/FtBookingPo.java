@@ -34,8 +34,6 @@ public class FtBookingPo {
 
     private Long teamId;
 
-    private Long carId;
-
     private BookingType bookingType;
 
     private BookingStatus bookingStatus;

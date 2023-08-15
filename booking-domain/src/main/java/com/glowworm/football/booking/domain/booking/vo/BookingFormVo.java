@@ -1,5 +1,6 @@
 package com.glowworm.football.booking.domain.booking.vo;
 
+import com.glowworm.football.booking.domain.booking.enums.BookingType;
 import com.glowworm.football.booking.domain.car.vo.LaunchCarFormVo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,14 +24,8 @@ public class BookingFormVo {
     // 球队ID
     private Long teamId;
 
-    // 车ID
-    private Long carId;
-
-    // 车表单
-    private CarFormInBookingVo carFormVo;
-
     // 预约类型
-    private Integer bookingType;
+    private BookingType bookingType;
 
 
 }
