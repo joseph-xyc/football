@@ -51,7 +51,9 @@ public class MatchingServiceImpl implements IMatchingService {
         return matchingMapper.selectList(Wrappers.lambdaQuery(FtMatchingPo.class)
                 .eq(Objects.nonNull(query.getScheduleId()), FtMatchingPo::getScheduleId, query.getScheduleId())
                 .in(Objects.nonNull(query.getScheduleIds()), FtMatchingPo::getScheduleId, query.getScheduleIds())
-                .eq(Objects.nonNull(query.getMatchingStatus()), FtMatchingPo::getMatchingStatus, query.getMatchingStatus()));
+                .eq(Objects.nonNull(query.getMatchingStatus()), FtMatchingPo::getMatchingStatus, query.getMatchingStatus())
+                .orderByAsc(FtMatchingPo::getMatchingTime)
+        );
     }
 
     @Override
