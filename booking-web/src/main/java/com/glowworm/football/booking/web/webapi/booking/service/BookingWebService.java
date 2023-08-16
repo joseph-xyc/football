@@ -1,11 +1,9 @@
 package com.glowworm.football.booking.web.webapi.booking.service;
 
-import com.glowworm.football.booking.dao.po.passenger.FtPassengerPo;
 import com.glowworm.football.booking.domain.booking.vo.BookingVo;
 import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import com.glowworm.football.booking.domain.team.vo.TeamSimpleVo;
 import com.glowworm.football.booking.domain.user.UserBean;
-import com.glowworm.football.booking.service.passenger.IPassengerService;
 import com.glowworm.football.booking.service.team.ITeamService;
 import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +26,6 @@ public class BookingWebService {
 
     @Autowired
     private ITeamService teamService;
-    @Autowired
-    private IPassengerService passengerService;
 
     public List<BookingVo> enhanceTeamSimpleInfo (UserBean userBean, List<BookingVo> bookingList) {
 
@@ -62,24 +58,12 @@ public class BookingWebService {
             return;
         }
 
-        // 查询订单所关联的车
-        List<Long> carIds = bookingList.stream().map(BookingVo::getCarId).filter(Utils::isPositive).distinct().collect(Collectors.toList());
-        Map<Long, List<FtPassengerPo>> carId2PassengersMap = passengerService.queryPassengerOnBoard(carIds);
-
         bookingList.forEach(item -> {
-
             // 判断是否为预订人
             boolean isBookingUser = item.getUserId().equals(userBean.getId());
             if (isBookingUser) {
                 item.setIsBelong(TrueFalse.TRUE.getCode());
-                return;
             }
-
-            // 判断是否为乘客
-            List<FtPassengerPo> passengers = carId2PassengersMap.getOrDefault(item.getCarId(), Collections.emptyList());
-            boolean isBelong = passengers.stream().anyMatch(p -> p.getPassengerId().equals(userBean.getId()));
-            item.setIsBelong(TrueFalse.getByBoolean(isBelong).getCode());
-
         });
 
     }

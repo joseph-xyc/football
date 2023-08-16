@@ -25,6 +25,7 @@ import com.glowworm.football.booking.service.stadium.IStadiumTagService;
 import com.glowworm.football.booking.service.team.ITeamService;
 import com.glowworm.football.booking.service.util.DateUtils;
 import com.glowworm.football.booking.service.util.Utils;
+import com.glowworm.football.booking.web.webapi.booking.service.BookingWebService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,8 @@ public class StadiumWebService {
     private ITeamService teamService;
     @Autowired
     private IBookingService bookingService;
+    @Autowired
+    private BookingWebService bookingWebService;
     @Autowired
     private IMatchingService matchingService;
 
@@ -146,6 +149,7 @@ public class StadiumWebService {
 
         // booking
         List<BookingVo> bookings = bookingService.query(QueryBooking.builder().scheduleId(schedule.getId()).build());
+        bookings = bookingWebService.enhanceTeamSimpleInfo(user, bookings);
         boolean isWhole = bookings.stream().map(BookingVo::getBookingType).anyMatch(BookingType.WHOLE::equals);
 
         // team
@@ -183,6 +187,7 @@ public class StadiumWebService {
                 .matching(matching)
                 .matched(matched)
                 .matchingCount(matching.size())
+                .bookings(bookings)
                 .hasMatching(TrueFalse.getByBoolean(hasMatching).getCode())
                 .isWholeBooking(TrueFalse.getByBoolean(isWhole).getCode())
                 .build();

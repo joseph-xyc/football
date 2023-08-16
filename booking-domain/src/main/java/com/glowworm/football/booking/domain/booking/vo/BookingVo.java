@@ -34,8 +34,6 @@ public class BookingVo {
 
     private TeamSimpleVo teamSimpleVo;
 
-    private Long carId;
-
     private BookingType bookingType;
 
     private BookingStatus bookingStatus;
