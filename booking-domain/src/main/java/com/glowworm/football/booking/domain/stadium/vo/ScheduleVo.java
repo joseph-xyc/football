@@ -28,6 +28,8 @@ public class ScheduleVo {
 
     private Long stadiumId;
 
+    private String stadiumName;
+
     private Long blockId;
 
     private String blockName;

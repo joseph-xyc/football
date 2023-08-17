@@ -144,7 +144,10 @@ public class StadiumWebService {
 
     private ScheduleVo enhanceSchedule (UserBean user, FtStadiumSchedulePo schedule) {
 
-        // block信息
+        // stadium
+        FtStadiumPo stadium = stadiumService.getStadium(schedule.getStadiumId());
+
+        // block
         FtStadiumBlockPo block = stadiumService.getBlock(schedule.getBlockId());
 
         // booking
@@ -172,6 +175,7 @@ public class StadiumWebService {
         return ScheduleVo.builder()
                 .id(schedule.getId())
                 .stadiumId(schedule.getStadiumId())
+                .stadiumName(stadium.getStadiumName())
                 .blockId(schedule.getBlockId())
                 .blockName(block.getBlockName())
                 .scaleType(block.getScaleType())
