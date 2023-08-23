@@ -158,7 +158,7 @@ public class StadiumWebService {
         // team
         List<Long> teamIds = bookings.stream().map(BookingVo::getTeamId).collect(Collectors.toList());
         List<TeamSimpleVo> teams = teamService.queryRandomTeamList(teamIds);
-        teams = tryFillDefaultTeams(teams);
+        teams = fillTeams(teams, isWhole);
 
         // matching
         List<MatchingVo> matching = matchingService.queryMatchingVo(QueryMatching.builder()
@@ -197,12 +197,18 @@ public class StadiumWebService {
                 .build();
     }
 
-    private List<TeamSimpleVo> tryFillDefaultTeams (List<TeamSimpleVo> teams) {
+    private List<TeamSimpleVo> fillTeams (List<TeamSimpleVo> teams, boolean isWhole) {
 
         TeamSimpleVo defaultTeam = teamService.getDefaultTeam();
 
         if (CollectionUtils.isEmpty(teams)) {
             return Lists.newArrayList(defaultTeam, defaultTeam);
+        }
+
+        // 全场预订, 则主客队相同
+        if (isWhole) {
+            teams.add(teams.get(0));
+            return teams;
         }
 
         if (teams.size() == 1) {
