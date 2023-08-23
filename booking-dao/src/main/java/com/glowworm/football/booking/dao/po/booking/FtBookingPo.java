@@ -38,6 +38,8 @@ public class FtBookingPo {
 
     private BookingStatus bookingStatus;
 
+    private Integer price;
+
     @TableLogic
     private Integer isDeleted;
 

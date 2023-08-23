@@ -38,5 +38,7 @@ public class BookingVo {
 
     private BookingStatus bookingStatus;
 
+    private Integer price;
+
     private Integer isBelong;
 }

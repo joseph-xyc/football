@@ -134,6 +134,7 @@ public class BookingActionServiceImpl implements IBookingActionService {
                 .teamId(bookingVo.getTeamId())
                 .bookingType(bookingVo.getBookingType())
                 .bookingStatus(BookingStatus.BOOKED)
+                .price(calcPrice(bookingVo.getBookingType(), schedule))
                 .build();
         bookingMapper.insert(bookingPo);
 
@@ -141,6 +142,15 @@ public class BookingActionServiceImpl implements IBookingActionService {
         updateSchedule(bookingPo);
 
         return bookingPo.getId();
+    }
+
+    private Integer calcPrice (BookingType bookingType, FtStadiumSchedulePo schedule) {
+
+        if (bookingType.equals(BookingType.HALF)) {
+            return schedule.getPrice() / 2;
+        }
+
+        return schedule.getPrice();
     }
 
     private void updateSchedule (FtBookingPo booking) {
