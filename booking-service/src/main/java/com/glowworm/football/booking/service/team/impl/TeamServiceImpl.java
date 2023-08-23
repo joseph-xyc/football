@@ -46,8 +46,11 @@ public class TeamServiceImpl implements ITeamService {
         }
 
         List<TeamSimpleVo> randomTeams = teamConfig.getRandomTeam();
-        return randomTeams.stream()
-                .filter(item -> randomTeamIds.contains(item.getId()))
+
+        Map<Long, TeamSimpleVo> teamMap = randomTeams.stream().collect(Collectors.toMap(TeamSimpleVo::getId, Function.identity()));
+
+        return randomTeamIds.stream()
+                .map(teamMap::get)
                 .collect(Collectors.toList());
     }
 
