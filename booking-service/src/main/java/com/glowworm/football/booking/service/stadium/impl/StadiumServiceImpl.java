@@ -8,6 +8,7 @@ import com.glowworm.football.booking.dao.mapper.FtStadiumMapper;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumImagePo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import com.glowworm.football.booking.domain.publish_price.enums.Week;
 import com.glowworm.football.booking.domain.publish_price.query.QueryPublishPrice;
@@ -263,6 +264,12 @@ public class StadiumServiceImpl implements IStadiumService {
     @Override
     public FtStadiumPo getStadium(Long id) {
         return stadiumMapper.selectById(id);
+    }
+
+    @Override
+    public List<FtStadiumPo> queryStadium(List<Long> ids) {
+
+        return stadiumMapper.selectBatchIds(ids);
     }
 
     @Override

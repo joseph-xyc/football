@@ -2,6 +2,7 @@ package com.glowworm.football.booking.service.stadium.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtStadiumScheduleMapper;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.stadium.StadiumScheduleBean;
 import com.glowworm.football.booking.domain.stadium.enums.ScheduleClock;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -34,6 +36,7 @@ public class StadiumScheduleServiceImpl implements IStadiumScheduleService {
     public List<FtStadiumSchedulePo> querySchedule(QuerySchedule query) {
 
         List<FtStadiumSchedulePo> schedulePos = scheduleMapper.selectList(Wrappers.lambdaQuery(FtStadiumSchedulePo.class)
+                .in(!CollectionUtils.isEmpty(query.getIds()), FtStadiumSchedulePo::getId, query.getIds())
                 .eq(Objects.nonNull(query.getStadiumId()), FtStadiumSchedulePo::getStadiumId, query.getStadiumId())
                 .eq(Objects.nonNull(query.getBlockId()), FtStadiumSchedulePo::getBlockId, query.getBlockId())
                 .eq(Objects.nonNull(query.getDate()), FtStadiumSchedulePo::getDate, Objects.isNull(query.getDate()) ? null : new Timestamp(query.getDate()))

@@ -3,7 +3,9 @@ package com.glowworm.football.booking.web.webapi.booking;
 import com.glowworm.football.booking.domain.booking.query.QueryBooking;
 import com.glowworm.football.booking.domain.booking.vo.BookingFormVo;
 import com.glowworm.football.booking.domain.booking.vo.BookingVo;
+import com.glowworm.football.booking.domain.booking.vo.MyBookingVo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
+import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.service.booking.IBookingActionService;
 import com.glowworm.football.booking.service.booking.IBookingService;
@@ -31,12 +33,12 @@ public class BookingController extends BaseController {
     @Autowired
     private BookingWebService bookingWebService;
 
-    @GetMapping("/list_in_schedule")
-    public Response<List<BookingVo>> booking (WxContext ctx, QueryBooking query) {
-
-        List<BookingVo> bookingList = bookingService.query(query);
-        return Response.success(bookingWebService.enhanceTeamSimpleInfo(getUser(ctx), bookingList));
-    }
+//    @GetMapping("/list_in_schedule")
+//    public Response<List<BookingVo>> booking (WxContext ctx, QueryBooking query) {
+//
+//        List<BookingVo> bookingList = bookingService.query(query);
+//        return Response.success(bookingWebService.enhanceTeamSimpleInfo(getUser(ctx), bookingList));
+//    }
 
     @PostMapping(value = "")
     public Response<Long> booking (WxContext ctx, @RequestBody BookingFormVo formVo) {
@@ -51,4 +53,16 @@ public class BookingController extends BaseController {
         bookingActionService.cancel(getUser(ctx), id);
         return Response.success(Strings.EMPTY);
     }
+
+    @GetMapping("/my_booking")
+    public Response<List<MyBookingVo>> booking (WxContext ctx, QueryBooking query) {
+
+        // 默认设置
+        query.setUserId(getUser(ctx).getId());
+        query.setCtimeDesc(TrueFalse.TRUE.getCode());
+
+        List<BookingVo> bookingList = bookingService.query(query);
+        return Response.success(bookingWebService.convertMyBookingVo(bookingList));
+    }
+
 }

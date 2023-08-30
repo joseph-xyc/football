@@ -4,6 +4,7 @@ package com.glowworm.football.booking.service.stadium;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumCollectPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
 import com.glowworm.football.booking.domain.stadium.StadiumBean;
 import com.glowworm.football.booking.domain.stadium.vo.StadiumInfoVo;
@@ -21,6 +22,8 @@ public interface IStadiumService {
     StadiumInfoVo getDetail (Long id);
 
     FtStadiumPo getStadium (Long id);
+
+    List<FtStadiumPo> queryStadium (List<Long> ids);
 
     FtStadiumBlockPo getBlock (Long id);
 

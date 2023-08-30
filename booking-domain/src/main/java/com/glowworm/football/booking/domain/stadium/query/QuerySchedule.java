@@ -18,6 +18,8 @@ public class QuerySchedule {
 
     private Long id;
 
+    private List<Long> ids;
+
     private Long stadiumId;
 
     private Long blockId;

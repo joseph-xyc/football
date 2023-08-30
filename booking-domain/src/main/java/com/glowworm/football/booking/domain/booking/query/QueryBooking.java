@@ -14,6 +14,8 @@ import java.util.List;
 @Builder
 public class QueryBooking {
 
+    private Long userId;
+
     private Long stadiumId;
 
     private Long blockId;
@@ -23,4 +25,6 @@ public class QueryBooking {
     private List<Long> scheduleIds;
 
     private BookingStatus bookingStatus;
+
+    private Integer ctimeDesc;
 }
