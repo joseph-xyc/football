@@ -2,10 +2,7 @@ package com.glowworm.football.booking.web.webapi.msg;
 
 import com.glowworm.football.booking.dao.po.msg.FtMsgPo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
-import com.glowworm.football.booking.domain.common.demo.query.QueryDemo;
-import com.glowworm.football.booking.domain.common.demo.vo.DemoVo;
 import com.glowworm.football.booking.domain.common.response.Response;
-import com.glowworm.football.booking.domain.matching.vo.MatchingFormVo;
 import com.glowworm.football.booking.domain.msg.MsgBean;
 import com.glowworm.football.booking.domain.msg.vo.MsgVo;
 import com.glowworm.football.booking.service.msg.IMsgActionService;
@@ -44,6 +41,13 @@ public class MsgController extends BaseController {
     public Response<String> newMsg (WxContext ctx, @RequestBody MsgBean msg) {
 
         msgActionService.newMsg(msg);
+        return Response.success(Strings.EMPTY);
+    }
+
+    @GetMapping(value = "/read_simplify")
+    public Response<String> readMsgSimplify (WxContext ctx) {
+
+        msgActionService.readMsgSimplify(getUser(ctx).getId());
         return Response.success(Strings.EMPTY);
     }
 }

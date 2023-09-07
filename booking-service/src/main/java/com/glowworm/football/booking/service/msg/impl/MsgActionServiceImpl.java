@@ -1,10 +1,11 @@
 package com.glowworm.football.booking.service.msg.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtMsgMapper;
 import com.glowworm.football.booking.dao.po.msg.FtMsgPo;
+import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import com.glowworm.football.booking.domain.msg.MsgBean;
 import com.glowworm.football.booking.service.msg.IMsgActionService;
-import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,10 @@ public class MsgActionServiceImpl implements IMsgActionService {
     @Override
     public void readMsgSimplify(Long userId) {
 
+        FtMsgPo updateMsg = FtMsgPo.builder()
+                .isRead(TrueFalse.TRUE.getCode())
+                .build();
+        msgMapper.update(updateMsg, Wrappers.lambdaQuery(FtMsgPo.class)
+                .eq(FtMsgPo::getUserId, userId));
     }
 }
