@@ -2,6 +2,7 @@ package com.glowworm.football.booking.web.webapi.msg;
 
 import com.glowworm.football.booking.dao.po.msg.FtMsgPo;
 import com.glowworm.football.booking.domain.common.context.WxContext;
+import com.glowworm.football.booking.domain.common.enums.TrueFalse;
 import com.glowworm.football.booking.domain.common.response.Response;
 import com.glowworm.football.booking.domain.msg.MsgBean;
 import com.glowworm.football.booking.domain.msg.vo.MsgVo;
@@ -35,6 +36,16 @@ public class MsgController extends BaseController {
         List<FtMsgPo> msgList = msgService.getMsgList(getUser(ctx).getId());
         List<MsgVo> result = Utils.copy(msgList, MsgVo.class);
         return Response.success(result);
+    }
+
+    @GetMapping(value = "/has_unread")
+    public Response<Integer> hasUnread (WxContext ctx) {
+
+        List<FtMsgPo> msgList = msgService.getMsgList(getUser(ctx).getId());
+        List<MsgVo> result = Utils.copy(msgList, MsgVo.class);
+        boolean hasUnread = result.stream().anyMatch(item -> !Utils.isPositive(item.getIsRead()));
+
+        return Response.success(TrueFalse.getByBoolean(hasUnread).getCode());
     }
 
     @PostMapping(value = "/new")
