@@ -17,4 +17,6 @@ public interface IStadiumScheduleService {
 
     FtStadiumSchedulePo getSchedule (Long id);
 
+
+
 }

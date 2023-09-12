@@ -4,19 +4,28 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtBookingMapper;
 import com.glowworm.football.booking.dao.mapper.FtStadiumScheduleMapper;
 import com.glowworm.football.booking.dao.po.booking.FtBookingPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.booking.enums.BookingStatus;
 import com.glowworm.football.booking.domain.booking.enums.BookingType;
 import com.glowworm.football.booking.domain.booking.vo.BookingFormVo;
 import com.glowworm.football.booking.domain.booking.vo.CarFormInBookingVo;
 import com.glowworm.football.booking.domain.car.vo.LaunchCarFormVo;
+import com.glowworm.football.booking.domain.msg.MsgBean;
+import com.glowworm.football.booking.domain.msg.enums.MsgBizType;
+import com.glowworm.football.booking.domain.msg.enums.MsgSysType;
 import com.glowworm.football.booking.domain.stadium.StadiumScheduleBean;
 import com.glowworm.football.booking.domain.stadium.enums.ScheduleStatus;
 import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.service.booking.IBookingActionService;
 import com.glowworm.football.booking.service.car.ICarActionService;
+import com.glowworm.football.booking.service.msg.IMsgActionService;
+import com.glowworm.football.booking.service.msg.impl.MsgConfig;
 import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
+import com.glowworm.football.booking.service.stadium.IStadiumService;
 import com.glowworm.football.booking.service.team.ITeamActionService;
+import com.glowworm.football.booking.service.util.DateUtils;
 import com.glowworm.football.booking.service.util.Utils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -41,9 +50,13 @@ public class BookingActionServiceImpl implements IBookingActionService {
     @Autowired
     private IStadiumScheduleService scheduleService;
     @Autowired
-    private ICarActionService carActionService;
-    @Autowired
     private ITeamActionService teamActionService;
+    @Autowired
+    private MsgConfig msgConfig;
+    @Autowired
+    private IStadiumService stadiumService;
+    @Autowired
+    private IMsgActionService msgActionService;
 
     @Transactional
     @Override
@@ -101,6 +114,32 @@ public class BookingActionServiceImpl implements IBookingActionService {
                 .status(scheduleStatus)
                 .build();
         scheduleMapper.updateById(schedulePo);
+
+        cancelMsg(user, bookingPo);
+    }
+
+    private void cancelMsg (UserBean user, FtBookingPo booking) {
+
+        // stadium
+        FtStadiumPo stadium = stadiumService.getStadium(booking.getStadiumId());
+        // block
+        FtStadiumBlockPo block = stadiumService.getBlock(booking.getBlockId());
+        // schedule
+        FtStadiumSchedulePo schedule = scheduleService.getSchedule(booking.getScheduleId());
+
+        Long bookingIdStr = booking.getId();
+        String blockStr = String.format("%s %s", stadium.getStadiumName(), block.getBlockName());
+        String timeStr = String.format("%s %s", DateUtils.getTimestamp2String(schedule.getDate()), schedule.getClockBegin().getDesc() + " ~ " + schedule.getClockEnd().getDesc());
+
+        String content = String.format(msgConfig.getBookingCancelTemp(), bookingIdStr, blockStr, timeStr);
+
+        msgActionService.newMsg(MsgBean.builder()
+                .userId(user.getId())
+                .msgSysType(MsgSysType.NORMAL)
+                .msgBizType(MsgBizType.ORDER)
+                .date(DateUtils.getNow())
+                .content(content)
+                .build());
     }
 
     private Long doBooking (UserBean user, FtStadiumSchedulePo schedule, BookingFormVo bookingVo) {
@@ -109,7 +148,34 @@ public class BookingActionServiceImpl implements IBookingActionService {
         enhanceTeamId(bookingVo);
 
         // save Booking
-        return saveBooking(user, schedule, bookingVo);
+        Long bookingId = saveBooking(user, schedule, bookingVo);
+
+        // 发消息
+        doBookingMsg(schedule, user);
+
+        return bookingId;
+    }
+
+    private void doBookingMsg (FtStadiumSchedulePo schedule, UserBean user) {
+
+        // stadium
+        FtStadiumPo stadium = stadiumService.getStadium(schedule.getStadiumId());
+        // block
+        FtStadiumBlockPo block = stadiumService.getBlock(schedule.getBlockId());
+
+        String contactStr = stadium.getContactPhone();
+        String blockStr = String.format("%s %s", stadium.getStadiumName(), block.getBlockName());
+        String timeStr = String.format("%s %s", DateUtils.getTimestamp2String(schedule.getDate()), schedule.getClockBegin().getDesc() + " ~ " + schedule.getClockEnd().getDesc());
+
+        String content = String.format(msgConfig.getDoBookingTemp(), contactStr, blockStr, timeStr);
+
+        msgActionService.newMsg(MsgBean.builder()
+                .userId(user.getId())
+                .msgSysType(MsgSysType.NORMAL)
+                .msgBizType(MsgBizType.ORDER)
+                .date(DateUtils.getNow())
+                .content(content)
+                .build());
     }
 
     private void enhanceTeamId (BookingFormVo bookingVo) {

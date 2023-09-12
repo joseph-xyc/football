@@ -4,14 +4,21 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtMatchingMapper;
 import com.glowworm.football.booking.dao.po.matching.FtMatchingPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.matching.enums.MatchingStatus;
 import com.glowworm.football.booking.domain.matching.vo.MatchingFormVo;
-import com.glowworm.football.booking.domain.stadium.StadiumScheduleBean;
+import com.glowworm.football.booking.domain.msg.MsgBean;
+import com.glowworm.football.booking.domain.msg.enums.MsgBizType;
+import com.glowworm.football.booking.domain.msg.enums.MsgSysType;
 import com.glowworm.football.booking.domain.user.UserBean;
 import com.glowworm.football.booking.domain.user.enums.UserType;
 import com.glowworm.football.booking.service.matching.IMatchingActionService;
+import com.glowworm.football.booking.service.msg.IMsgActionService;
+import com.glowworm.football.booking.service.msg.impl.MsgConfig;
 import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
+import com.glowworm.football.booking.service.stadium.IStadiumService;
 import com.glowworm.football.booking.service.util.DateUtils;
 import com.glowworm.football.booking.service.util.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +40,13 @@ public class MatchingActionServiceImpl implements IMatchingActionService {
     @Autowired
     private FtMatchingMapper matchingMapper;
     @Autowired
+    private IStadiumService stadiumService;
+    @Autowired
     private IStadiumScheduleService scheduleService;
+    @Autowired
+    private IMsgActionService msgActionService;
+    @Autowired
+    private MsgConfig msgConfig;
 
     @Override
     @Transactional
@@ -46,10 +59,11 @@ public class MatchingActionServiceImpl implements IMatchingActionService {
                 .eq(FtMatchingPo::getUserId, user.getId())
                 .eq(FtMatchingPo::getScheduleId, formVo.getScheduleId()));
 
+        // 查询schedule
+        FtStadiumSchedulePo schedule = scheduleService.getSchedule(formVo.getScheduleId());
+
         // 保存匹配信息
         if (CollectionUtils.isEmpty(matchingList)) {
-
-            FtStadiumSchedulePo schedule = scheduleService.getSchedule(formVo.getScheduleId());
 
             matchingMapper.insert(FtMatchingPo.builder()
                     .matchingStatus(MatchingStatus.MATCHING)
@@ -58,15 +72,37 @@ public class MatchingActionServiceImpl implements IMatchingActionService {
                     .userId(user.getId())
                     .scheduleId(formVo.getScheduleId())
                     .build());
-            return;
+        } else {
+            // 更新匹配状态为 MATCHING
+            FtMatchingPo matchingRecord = matchingList.get(0);
+            matchingMapper.updateById(FtMatchingPo.builder()
+                    .id(matchingRecord.getId())
+                    .matchingStatus(MatchingStatus.MATCHING)
+                    .matchingTime(DateUtils.getNow())
+                    .build());
         }
 
-        // 更新匹配状态为 MATCHING
-        FtMatchingPo matchingRecord = matchingList.get(0);
-        matchingMapper.updateById(FtMatchingPo.builder()
-                .id(matchingRecord.getId())
-                .matchingStatus(MatchingStatus.MATCHING)
-                .matchingTime(DateUtils.getNow())
+        // 发送消息
+        doMatchMsg(schedule, user);
+    }
+
+    private void doMatchMsg (FtStadiumSchedulePo schedule, UserBean user) {
+
+        // stadium
+        FtStadiumPo stadium = stadiumService.getStadium(schedule.getStadiumId());
+        // block
+        FtStadiumBlockPo block = stadiumService.getBlock(schedule.getBlockId());
+
+        String blockStr = String.format("%s %s", stadium.getStadiumName(), block.getBlockName());
+        String timeStr = String.format("%s %s", DateUtils.getTimestamp2String(schedule.getDate()), schedule.getClockBegin().getDesc() + " ~ " + schedule.getClockEnd().getDesc());
+
+        String content = String.format(msgConfig.getMatchingTemp(), blockStr, timeStr);
+        msgActionService.newMsg(MsgBean.builder()
+                .userId(user.getId())
+                .msgSysType(MsgSysType.NORMAL)
+                .msgBizType(MsgBizType.MATCHING)
+                .date(DateUtils.getNow())
+                .content(content)
                 .build());
     }
 
@@ -88,6 +124,21 @@ public class MatchingActionServiceImpl implements IMatchingActionService {
         matchingMapper.updateById(FtMatchingPo.builder()
                 .id(matchingRecord.getId())
                 .matchingStatus(MatchingStatus.CANCEL)
+                .build());
+
+        // 发送消息
+        undoMatchMsg(user);
+    }
+
+    private void undoMatchMsg (UserBean user) {
+
+        String content = msgConfig.getMatchingCancelTemp();
+        msgActionService.newMsg(MsgBean.builder()
+                .userId(user.getId())
+                .msgSysType(MsgSysType.NORMAL)
+                .msgBizType(MsgBizType.MATCHING)
+                .date(DateUtils.getNow())
+                .content(content)
                 .build());
     }
 
