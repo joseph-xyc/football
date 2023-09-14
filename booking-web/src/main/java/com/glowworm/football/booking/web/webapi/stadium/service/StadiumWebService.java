@@ -152,7 +152,10 @@ public class StadiumWebService {
         FtStadiumBlockPo block = stadiumService.getBlock(schedule.getBlockId());
 
         // booking
-        List<BookingVo> bookings = bookingService.query(QueryBooking.builder().scheduleId(schedule.getId()).build());
+        List<BookingVo> bookings = bookingService.query(QueryBooking.builder()
+                .scheduleId(schedule.getId())
+                .bookingStatus(BookingStatus.BOOKED)
+                .build());
         bookings = bookingWebService.enhanceTeamSimpleInfo(user, bookings);
         boolean isWhole = bookings.stream().map(BookingVo::getBookingType).anyMatch(BookingType.WHOLE::equals);
 
