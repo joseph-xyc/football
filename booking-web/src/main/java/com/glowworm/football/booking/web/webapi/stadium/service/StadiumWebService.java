@@ -2,6 +2,7 @@ package com.glowworm.football.booking.web.webapi.stadium.service;
 
 import com.glowworm.football.booking.dao.po.matching.FtMatchingPo;
 import com.glowworm.football.booking.dao.po.stadium.*;
+import com.glowworm.football.booking.domain.booking.enums.BookingStatus;
 import com.glowworm.football.booking.domain.booking.enums.BookingType;
 import com.glowworm.football.booking.domain.booking.query.QueryBooking;
 import com.glowworm.football.booking.domain.booking.vo.BookingVo;
@@ -230,6 +231,7 @@ public class StadiumWebService {
         List<Long> scheduleIds = schedule.stream().map(FtStadiumSchedulePo::getId).collect(Collectors.toList());
         List<BookingVo> bookings = bookingService.query(QueryBooking.builder()
                 .scheduleIds(scheduleIds)
+                .bookingStatus(BookingStatus.BOOKED)
                 .build());
         Map<Long, List<BookingVo>> scheduleId2Bookings = bookings.stream().collect(Collectors.groupingBy(BookingVo::getScheduleId));
 
