@@ -30,4 +30,10 @@ public enum UserType {
 
     private final String desc;
 
+    public boolean isAdmin () {
+
+        return this.getCode().equals(STADIUM_ADMIN.getCode())
+                || this.getCode().equals(SYS.getCode());
+    }
+
 }

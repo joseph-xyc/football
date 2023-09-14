@@ -71,6 +71,102 @@ public class BookingActionServiceImpl implements IBookingActionService {
 
     @Transactional
     @Override
+    public void confirm(UserBean user, Long id) {
+
+        Utils.isTrue(user.getUserType().isAdmin(), "只有客服人员才能确认预订信息, 请您使用客服账号");
+        Utils.isTrue(Objects.nonNull(id), "预订id不能为空");
+
+        FtBookingPo booking = bookingMapper.selectById(id);
+        Utils.isTrue(booking.getBookingStatus().equals(BookingStatus.WAIT_STADIUM_CONFIRM), "只有[待球场确认]状态的订单才可以进行此操作");
+
+        // 校验schedule是否已占用
+        Long scheduleId = booking.getScheduleId();
+
+        BookingType bookingType = booking.getBookingType();
+
+        // 当前已确认的预订情况
+        Long halfBookedCount = halfBookedCount(scheduleId);
+        Long wholeBookedCount = wholeBookedCount(scheduleId);
+
+        // 全场订单校验
+        if (bookingType.equals(BookingType.WHOLE)) {
+            Utils.throwError(halfBookedCount > 0, "此场地已存在半场订单, 无法再确认全场订单了");
+            Utils.throwError(wholeBookedCount == 1, "此场地已存在全场订单, 无法再确认全场订单了");
+        }
+
+        // 半场订单校验
+        if (bookingType.equals(BookingType.HALF)) {
+            Utils.throwError(halfBookedCount >= 2, "此场地已确认预订了2个半场, 无法再确认半场订单了");
+            Utils.throwError(wholeBookedCount == 1, "此场地已存在全场订单, 无法再确认半场订单了");
+        }
+
+        // 更新booking状态
+        bookingMapper.updateById(FtBookingPo.builder()
+                .id(id)
+                .bookingStatus(BookingStatus.BOOKED)
+                .build());
+
+        // 更新schedule的状态
+        ScheduleStatus scheduleStatus = ScheduleStatus.HALF_BOOKED;
+        if (bookingType.equals(BookingType.WHOLE)) {
+            scheduleStatus = ScheduleStatus.BOOKED;
+        }
+        if (bookingType.equals(BookingType.HALF)) {
+            scheduleStatus = halfBookedCount == 1 ? ScheduleStatus.BOOKED : ScheduleStatus.HALF_BOOKED;
+        }
+
+        FtStadiumSchedulePo schedulePo = FtStadiumSchedulePo.builder()
+                .id(booking.getScheduleId())
+                .status(scheduleStatus)
+                .build();
+        scheduleMapper.updateById(schedulePo);
+
+        // 发送消息
+        sendConfirmMsg(user, booking);
+    }
+
+    private void sendConfirmMsg (UserBean user, FtBookingPo booking) {
+
+        // stadium
+        FtStadiumPo stadium = stadiumService.getStadium(booking.getStadiumId());
+        // block
+        FtStadiumBlockPo block = stadiumService.getBlock(booking.getBlockId());
+        // schedule
+        FtStadiumSchedulePo schedule = scheduleService.getSchedule(booking.getScheduleId());
+
+        String telStr = stadium.getContactPhone();
+        String blockStr = String.format("%s %s", stadium.getStadiumName(), block.getBlockName());
+        String timeStr = String.format("%s %s", DateUtils.getTimestamp2String(schedule.getDate()), schedule.getClockBegin().getDesc() + " ~ " + schedule.getClockEnd().getDesc());
+
+        String content = String.format(msgConfig.renderBookingConfirmTemp(blockStr, telStr, timeStr));
+
+        msgActionService.newMsg(MsgBean.builder()
+                .userId(user.getId())
+                .msgSysType(MsgSysType.NORMAL)
+                .msgBizType(MsgBizType.ORDER)
+                .date(DateUtils.getNow())
+                .content(content)
+                .build());
+    }
+
+    private Long halfBookedCount (Long scheduleId) {
+
+        return bookingMapper.selectCount(Wrappers.lambdaQuery(FtBookingPo.class)
+                .eq(FtBookingPo::getScheduleId, scheduleId)
+                .eq(FtBookingPo::getBookingType, BookingType.HALF)
+                .eq(FtBookingPo::getBookingStatus, BookingStatus.BOOKED));
+    }
+
+    private Long wholeBookedCount (Long scheduleId) {
+
+        return bookingMapper.selectCount(Wrappers.lambdaQuery(FtBookingPo.class)
+                .eq(FtBookingPo::getScheduleId, scheduleId)
+                .eq(FtBookingPo::getBookingType, BookingType.WHOLE)
+                .eq(FtBookingPo::getBookingStatus, BookingStatus.BOOKED));
+    }
+
+    @Transactional
+    @Override
     public void cancel(UserBean user, Long id) {
 
         /**
@@ -164,10 +260,9 @@ public class BookingActionServiceImpl implements IBookingActionService {
         FtStadiumBlockPo block = stadiumService.getBlock(schedule.getBlockId());
 
         String contactStr = stadium.getContactPhone();
-        String blockStr = String.format("%s %s", stadium.getStadiumName(), block.getBlockName());
-        String timeStr = String.format("%s %s", DateUtils.getTimestamp2String(schedule.getDate()), schedule.getClockBegin().getDesc() + " ~ " + schedule.getClockEnd().getDesc());
-
-        String content = String.format(msgConfig.getDoBookingTemp(), contactStr, blockStr, timeStr);
+        String blockStr = msgConfig.renderBlockStr(stadium.getStadiumName(), block.getBlockName());
+        String timeStr = msgConfig.renderTimeStr(schedule.getDate(), schedule.getClockBegin(), schedule.getClockEnd());
+        String content = msgConfig.renderDoBookingTemp(blockStr, contactStr, timeStr);
 
         msgActionService.newMsg(MsgBean.builder()
                 .userId(user.getId())
@@ -199,13 +294,10 @@ public class BookingActionServiceImpl implements IBookingActionService {
                 .userId(user.getId())
                 .teamId(bookingVo.getTeamId())
                 .bookingType(bookingVo.getBookingType())
-                .bookingStatus(BookingStatus.BOOKED)
+                .bookingStatus(BookingStatus.WAIT_STADIUM_CONFIRM)
                 .price(calcPrice(bookingVo.getBookingType(), schedule))
                 .build();
         bookingMapper.insert(bookingPo);
-
-        // 更新schedule
-        updateSchedule(bookingPo);
 
         return bookingPo.getId();
     }

@@ -47,6 +47,14 @@ public class BookingController extends BaseController {
         return Response.success(id);
     }
 
+    @PostMapping(value = "/confirm/{id}")
+    public Response<String> bookingConfirm (WxContext ctx, @PathVariable(value = "id") Long id) {
+
+        bookingActionService.confirm(getUser(ctx), id);
+        return Response.success(Strings.EMPTY);
+    }
+
+
     @PostMapping(value = "/cancel/{id}")
     public Response<String> cancel (WxContext ctx, @PathVariable(value = "id") Long id) {
 

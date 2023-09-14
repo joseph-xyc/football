@@ -12,5 +12,7 @@ public interface IBookingActionService {
 
     Long booking (UserBean user, BookingFormVo bookingVo);
 
+    void confirm (UserBean user, Long id);
+
     void cancel (UserBean user, Long id);
 }
