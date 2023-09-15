@@ -21,6 +21,8 @@ public enum MsgBizType {
 
     MATCHING(2, "匹配"),
 
+    SYS_NOTICE(10, "系统通知"),
+
     ;
 
     @EnumValue
