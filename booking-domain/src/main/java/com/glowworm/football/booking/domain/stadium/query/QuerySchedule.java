@@ -1,6 +1,7 @@
 package com.glowworm.football.booking.domain.stadium.query;
 
 import com.glowworm.football.booking.domain.stadium.enums.ScheduleClock;
+import com.glowworm.football.booking.domain.stadium.enums.ScheduleStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -29,6 +30,12 @@ public class QuerySchedule {
     private String dateBegin;
 
     private String dateEnd;
+
+    private Timestamp dateBeginTimestamp;
+
+    private Timestamp dateEndTimestamp;
+
+    private List<ScheduleStatus> status;
 
     private Integer isAfternoon;
 

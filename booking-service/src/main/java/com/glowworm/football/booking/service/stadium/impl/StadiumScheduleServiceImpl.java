@@ -42,6 +42,9 @@ public class StadiumScheduleServiceImpl implements IStadiumScheduleService {
                 .eq(Objects.nonNull(query.getDate()), FtStadiumSchedulePo::getDate, Objects.isNull(query.getDate()) ? null : new Timestamp(query.getDate()))
                 .ge(Objects.nonNull(query.getDateBegin()), FtStadiumSchedulePo::getDate, MybatisUtils.notNull(query.getDateBegin(), DateUtils::getTimestamp))
                 .le(Objects.nonNull(query.getDateEnd()), FtStadiumSchedulePo::getDate, MybatisUtils.notNull(query.getDateEnd(), DateUtils::getTimestamp))
+                .ge(Objects.nonNull(query.getDateBeginTimestamp()), FtStadiumSchedulePo::getDate, query.getDateBeginTimestamp())
+                .le(Objects.nonNull(query.getDateEndTimestamp()), FtStadiumSchedulePo::getDate, query.getDateEndTimestamp())
+                .in(!CollectionUtils.isEmpty(query.getStatus()), FtStadiumSchedulePo::getStatus, query.getStatus())
                 .in(Utils.isPositive(query.getIsAfternoon()), FtStadiumSchedulePo::getClockBegin, ScheduleClock.getAfternoonClock()));
 
         return schedulePos;

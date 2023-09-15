@@ -5,21 +5,30 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtStadiumBlockMapper;
 import com.glowworm.football.booking.dao.mapper.FtStadiumImageMapper;
 import com.glowworm.football.booking.dao.mapper.FtStadiumMapper;
+import com.glowworm.football.booking.dao.po.matching.FtMatchingPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumBlockPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumImagePo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
+import com.glowworm.football.booking.domain.booking.query.QueryBooking;
 import com.glowworm.football.booking.domain.common.enums.TrueFalse;
+import com.glowworm.football.booking.domain.matching.query.QueryMatching;
 import com.glowworm.football.booking.domain.publish_price.enums.Week;
 import com.glowworm.football.booking.domain.publish_price.query.QueryPublishPrice;
 import com.glowworm.football.booking.domain.stadium.*;
 import com.glowworm.football.booking.domain.stadium.enums.*;
+import com.glowworm.football.booking.domain.stadium.query.QuerySchedule;
 import com.glowworm.football.booking.domain.stadium.query.QueryStadium;
 import com.glowworm.football.booking.domain.stadium.vo.StadiumBlockVo;
 import com.glowworm.football.booking.domain.stadium.vo.StadiumInfoVo;
+import com.glowworm.football.booking.service.booking.IBookingService;
+import com.glowworm.football.booking.service.matching.IMatchingService;
 import com.glowworm.football.booking.service.publish_price.IPublishPriceService;
+import com.glowworm.football.booking.service.stadium.IStadiumScheduleService;
 import com.glowworm.football.booking.service.stadium.IStadiumService;
+import com.glowworm.football.booking.service.util.DateUtils;
 import com.glowworm.football.booking.service.util.Utils;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -41,15 +51,16 @@ public class StadiumServiceImpl implements IStadiumService {
 
     @Autowired
     private FtStadiumMapper stadiumMapper;
-
     @Autowired
     private FtStadiumBlockMapper blockMapper;
-
     @Autowired
     private FtStadiumImageMapper ftStadiumImageMapper;
-
     @Autowired
     private IPublishPriceService priceService;
+    @Autowired
+    private IMatchingService matchingService;
+    @Autowired
+    private IStadiumScheduleService scheduleService;
 
     @Override
     public List<StadiumBean> queryList(QueryStadium query) {
@@ -257,6 +268,28 @@ public class StadiumServiceImpl implements IStadiumService {
         StadiumInfoVo stadiumVo = Utils.copy(stadiumPo, StadiumInfoVo.class);
         stadiumVo.setBlockList(blockVoList);
         stadiumVo.setImages(images);
+
+        // 球场统计信息
+        stadiumVo.setBlockCount(blockList.size());
+
+        // 本周起止时间
+        Timestamp begin = DateUtils.getBeginDayOfWeek(DateUtils.getNow());
+        Timestamp end = DateUtils.getEndDayOfWeek(DateUtils.getNow());
+
+        // 本周匹配人数
+        List<FtMatchingPo> matchingCount = matchingService.queryMatchingList(QueryMatching.builder()
+                .matchingTimeBegin(begin)
+                .matchingTimeEnd(end)
+                .build());
+        stadiumVo.setMatchingCountInWeek(matchingCount.size());
+
+        // 本周预定场次
+        List<FtStadiumSchedulePo> scheduleCount = scheduleService.querySchedule(QuerySchedule.builder()
+                .dateBeginTimestamp(begin)
+                .dateEndTimestamp(end)
+                .status(Lists.newArrayList(ScheduleStatus.HALF_BOOKED, ScheduleStatus.BOOKED))
+                .build());
+        stadiumVo.setBookedCountInWeek(scheduleCount.size());
 
         return stadiumVo;
     }

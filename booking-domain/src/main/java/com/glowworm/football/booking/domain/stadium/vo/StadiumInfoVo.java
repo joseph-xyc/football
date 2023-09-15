@@ -42,4 +42,13 @@ public class StadiumInfoVo {
      */
     private List<String> images;
 
+    // 场地数量
+    private Integer blockCount;
+
+    // 本周匹配人数
+    private Integer matchingCountInWeek;
+
+    // 本周预定场次
+    private Integer bookedCountInWeek;
+
 }

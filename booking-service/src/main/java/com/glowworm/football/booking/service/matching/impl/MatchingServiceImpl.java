@@ -46,12 +46,15 @@ public class MatchingServiceImpl implements IMatchingService {
         return result.stream().collect(Collectors.groupingBy(FtMatchingPo::getScheduleId));
     }
 
-    private List<FtMatchingPo> queryMatchingList (QueryMatching query) {
+    @Override
+    public List<FtMatchingPo> queryMatchingList (QueryMatching query) {
 
         return matchingMapper.selectList(Wrappers.lambdaQuery(FtMatchingPo.class)
                 .eq(Objects.nonNull(query.getScheduleId()), FtMatchingPo::getScheduleId, query.getScheduleId())
                 .in(Objects.nonNull(query.getScheduleIds()), FtMatchingPo::getScheduleId, query.getScheduleIds())
                 .eq(Objects.nonNull(query.getMatchingStatus()), FtMatchingPo::getMatchingStatus, query.getMatchingStatus())
+                .ge(Objects.nonNull(query.getMatchingTimeBegin()), FtMatchingPo::getMatchingTime, query.getMatchingTimeBegin())
+                .le(Objects.nonNull(query.getMatchingTimeEnd()), FtMatchingPo::getMatchingTime, query.getMatchingTimeEnd())
                 .orderByAsc(FtMatchingPo::getMatchingTime)
         );
     }

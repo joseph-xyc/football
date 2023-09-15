@@ -4,6 +4,7 @@ import com.glowworm.football.booking.domain.matching.enums.MatchingStatus;
 import lombok.Builder;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -19,4 +20,8 @@ public class QueryMatching {
     private List<Long> scheduleIds;
 
     private MatchingStatus matchingStatus;
+
+    private Timestamp matchingTimeBegin;
+
+    private Timestamp matchingTimeEnd;
 }

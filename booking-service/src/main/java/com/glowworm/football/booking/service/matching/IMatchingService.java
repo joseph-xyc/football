@@ -15,5 +15,7 @@ public interface IMatchingService {
 
     Map<Long, List<FtMatchingPo>> queryMatching (QueryMatching query);
 
+    List<FtMatchingPo> queryMatchingList (QueryMatching query);
+
     List<MatchingVo> queryMatchingVo (QueryMatching query);
 }
