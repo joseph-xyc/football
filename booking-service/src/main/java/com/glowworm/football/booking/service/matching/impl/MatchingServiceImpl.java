@@ -3,6 +3,7 @@ package com.glowworm.football.booking.service.matching.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.glowworm.football.booking.dao.mapper.FtMatchingMapper;
 import com.glowworm.football.booking.dao.po.matching.FtMatchingPo;
+import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.dao.po.user.FtUserPo;
 import com.glowworm.football.booking.domain.matching.query.QueryMatching;
 import com.glowworm.football.booking.domain.matching.vo.MatchingVo;
@@ -53,6 +54,7 @@ public class MatchingServiceImpl implements IMatchingService {
                 .eq(Objects.nonNull(query.getScheduleId()), FtMatchingPo::getScheduleId, query.getScheduleId())
                 .in(Objects.nonNull(query.getScheduleIds()), FtMatchingPo::getScheduleId, query.getScheduleIds())
                 .eq(Objects.nonNull(query.getMatchingStatus()), FtMatchingPo::getMatchingStatus, query.getMatchingStatus())
+                .in(!CollectionUtils.isEmpty(query.getMatchingStatusList()), FtMatchingPo::getMatchingStatus, query.getMatchingStatusList())
                 .ge(Objects.nonNull(query.getMatchingTimeBegin()), FtMatchingPo::getMatchingTime, query.getMatchingTimeBegin())
                 .le(Objects.nonNull(query.getMatchingTimeEnd()), FtMatchingPo::getMatchingTime, query.getMatchingTimeEnd())
                 .ge(Objects.nonNull(query.getScheduleDateBegin()), FtMatchingPo::getScheduleDate, query.getScheduleDateBegin())

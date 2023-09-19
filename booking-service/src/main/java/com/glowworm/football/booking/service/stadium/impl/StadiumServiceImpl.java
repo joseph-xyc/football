@@ -12,6 +12,7 @@ import com.glowworm.football.booking.dao.po.stadium.FtStadiumPo;
 import com.glowworm.football.booking.dao.po.stadium.FtStadiumSchedulePo;
 import com.glowworm.football.booking.domain.booking.query.QueryBooking;
 import com.glowworm.football.booking.domain.common.enums.TrueFalse;
+import com.glowworm.football.booking.domain.matching.enums.MatchingStatus;
 import com.glowworm.football.booking.domain.matching.query.QueryMatching;
 import com.glowworm.football.booking.domain.publish_price.enums.Week;
 import com.glowworm.football.booking.domain.publish_price.query.QueryPublishPrice;
@@ -278,6 +279,7 @@ public class StadiumServiceImpl implements IStadiumService {
 
         // 本周匹配人数
         List<FtMatchingPo> matchingCount = matchingService.queryMatchingList(QueryMatching.builder()
+                .matchingStatusList(Lists.newArrayList(MatchingStatus.MATCHING, MatchingStatus.MATCHED, MatchingStatus.END))
                 .scheduleDateBegin(begin)
                 .scheduleDateEnd(end)
                 .build());

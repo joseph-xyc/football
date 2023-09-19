@@ -21,6 +21,8 @@ public class QueryMatching {
 
     private MatchingStatus matchingStatus;
 
+    private List<MatchingStatus> matchingStatusList;
+
     private Timestamp matchingTimeBegin;
 
     private Timestamp matchingTimeEnd;
