@@ -55,6 +55,8 @@ public class MatchingServiceImpl implements IMatchingService {
                 .eq(Objects.nonNull(query.getMatchingStatus()), FtMatchingPo::getMatchingStatus, query.getMatchingStatus())
                 .ge(Objects.nonNull(query.getMatchingTimeBegin()), FtMatchingPo::getMatchingTime, query.getMatchingTimeBegin())
                 .le(Objects.nonNull(query.getMatchingTimeEnd()), FtMatchingPo::getMatchingTime, query.getMatchingTimeEnd())
+                .ge(Objects.nonNull(query.getScheduleDateBegin()), FtMatchingPo::getScheduleDate, query.getScheduleDateBegin())
+                .le(Objects.nonNull(query.getScheduleDateEnd()), FtMatchingPo::getScheduleDate, query.getScheduleDateEnd())
                 .orderByAsc(FtMatchingPo::getMatchingTime)
         );
     }

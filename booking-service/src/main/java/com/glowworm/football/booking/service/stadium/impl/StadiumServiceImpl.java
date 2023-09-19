@@ -278,8 +278,8 @@ public class StadiumServiceImpl implements IStadiumService {
 
         // 本周匹配人数
         List<FtMatchingPo> matchingCount = matchingService.queryMatchingList(QueryMatching.builder()
-                .matchingTimeBegin(begin)
-                .matchingTimeEnd(end)
+                .scheduleDateBegin(begin)
+                .scheduleDateEnd(end)
                 .build());
         stadiumVo.setMatchingCountInWeek(matchingCount.size());
 

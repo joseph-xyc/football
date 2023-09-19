@@ -32,6 +32,8 @@ public class FtMatchingPo {
 
     private Timestamp matchingTime;
 
+    private Timestamp scheduleDate;
+
     private MatchingStatus matchingStatus;
 
     @TableLogic

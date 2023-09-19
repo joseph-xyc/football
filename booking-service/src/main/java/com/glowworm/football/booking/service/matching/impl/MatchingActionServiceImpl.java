@@ -71,6 +71,7 @@ public class MatchingActionServiceImpl implements IMatchingActionService {
                     .blockId(schedule.getBlockId())
                     .userId(user.getId())
                     .scheduleId(formVo.getScheduleId())
+                    .scheduleDate(schedule.getDate())
                     .build());
         } else {
             // 更新匹配状态为 MATCHING

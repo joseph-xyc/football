@@ -24,4 +24,8 @@ public class QueryMatching {
     private Timestamp matchingTimeBegin;
 
     private Timestamp matchingTimeEnd;
+
+    private Timestamp scheduleDateBegin;
+
+    private Timestamp scheduleDateEnd;
 }
